@@ -4,7 +4,7 @@
 
 ## Working Group
 
-| Name Surname (initials) 		| GUID                                     |
-| ----------------------------- | ---------------------------------------- |
-| Laura Nowogórska - KazuSady   | `{Need to find it}` |
-| 						  		| 										   |
+| Name Surname (initials) 		            | GUID                                     |
+| ------------------------------------------| ---------------------------------------- |
+| Laura Nowogórska - KazuSady               | `{Need to find it}`                      |
+| Szymon Wydmuch - SzczupakKrolemPontaru	| `{Need to find it}`      				   |
