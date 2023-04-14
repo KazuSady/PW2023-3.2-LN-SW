@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 
 namespace Dane
 {
-    internal class Obszar
+    public class Obszar
     {
         private int height;
         private int width;
+        private bool isEnabled;
         private List<Kula> kule = new List<Kula>();
 
         public Kula CreateKula(int ballSize)

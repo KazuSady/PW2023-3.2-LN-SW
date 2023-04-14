@@ -16,6 +16,10 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "View", "Etap1\View\View.csproj", "{0FF71853-A2C2-404E-9568-3C2E09D4E095}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Testy", "Etap1\Testy\Testy.csproj", "{3ECB9F13-1850-4412-A355-F7252B67355E}"
+	ProjectSection(ProjectDependencies) = postProject
+		{06109C43-8CF7-4241-A327-D148E6C65500} = {06109C43-8CF7-4241-A327-D148E6C65500}
+		{FDB89D68-3D83-45BB-81E1-5A6771683DC1} = {FDB89D68-3D83-45BB-81E1-5A6771683DC1}
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Elementy rozwiązania", "Elementy rozwiązania", "{49867BA8-C903-417F-992E-E3300E6D05CA}"
 	ProjectSection(SolutionItems) = preProject

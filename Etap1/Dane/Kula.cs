@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Dane
 {
-    internal class Kula 
+    public class Kula 
     {
         private double x;
         private double y;
@@ -43,7 +43,7 @@ namespace Dane
             movement[1] = yMovement;
         }
 
-        protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        protected void OnPropertyChanged([CallerMemberName] string propertyName = "")
         {
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
@@ -55,13 +55,21 @@ namespace Dane
             OnPropertyChanged("Position");
         }
 
-        public double getWeight() { return weight; }
         public double X
-        { get { return x; } set { x = value; OnPropertyChanged("X"); } }
+        { 
+            get { 
+                return x; 
+            } 
+            set { 
+                x = value; OnPropertyChanged("X"); 
+            } 
+        }
         public double Y
         { get { return y; } set { y = value; OnPropertyChanged("Y"); } }
         public double R
         { get { return r; } set {  r = value; OnPropertyChanged("R"); } }
+        public double Weight 
+        { get { return weight; } set { weight = value; OnPropertyChanged("Weight"); } }
         public double XMovement
         { get { return movement[0]; } set { movement[0] = value; } }
         public double YMovement
