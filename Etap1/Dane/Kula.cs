@@ -24,6 +24,7 @@ namespace Dane
             this.y = y;
             this.r = r;
             this.weight = weight;
+
             Random random = new Random();
             double xMovement = 0, yMovement = 0;
             while(xMovement == 0 || yMovement == 0)
@@ -56,14 +57,7 @@ namespace Dane
         }
 
         public double X
-        { 
-            get { 
-                return x; 
-            } 
-            set { 
-                x = value; OnPropertyChanged("X"); 
-            } 
-        }
+        { get { return x; } set { x = value; OnPropertyChanged("X"); } }
         public double Y
         { get { return y; } set { y = value; OnPropertyChanged("Y"); } }
         public double R

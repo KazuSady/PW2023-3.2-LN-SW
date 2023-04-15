@@ -1,4 +1,5 @@
 ﻿using Dane;
+using System.Runtime.ExceptionServices;
 
 namespace Testy
 {
@@ -6,6 +7,7 @@ namespace Testy
     public class ObszarTest
     {
         Obszar obszar = new Obszar(400, 400, 10, 10);
+
         [TestMethod]
         public void testGetter()
         {
@@ -14,6 +16,8 @@ namespace Testy
             Assert.AreEqual(10, obszar.Kule.Count);
             Assert.AreEqual(10, obszar.Kule.ElementAt(0).R);
         }
+
+        [TestMethod]
         public void testSetter()
         {
             obszar.IsRunning = true;
