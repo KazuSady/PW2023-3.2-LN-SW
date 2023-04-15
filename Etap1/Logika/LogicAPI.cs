@@ -18,6 +18,7 @@ namespace Logika
         {
             private AbstractDaneAPI dataApi;
             private Obszar obszar;
+            private List<Task> tasks = new List<Task>();
             public LogicAPI(AbstractDaneAPI abstractDaneAPI = null)
             {
                 if (abstractDaneAPI == null)
@@ -36,18 +37,21 @@ namespace Logika
                 obszar.CreateKulaList(kulaAmount, kulaRadius);
                 foreach(Kula kula in obszar.Kule)
                 {
-                    Thread thread = new Thread(() => 
+                    Task task = Task.Run(() =>
                     {
                         while (this.obszar.IsRunning)
                         {
                             Random random = new Random();
-                            kula.XMovement = random.Next(-10,10);
-                            kula.YMovement = random.Next(-10,10);
-                            kula.makeMove();
-                            Thread.Sleep(10);
+                            lock (kula)
+                            {
+                                kula.XMovement = random.Next(-10, 10);
+                                kula.YMovement = random.Next(-10, 10);
+                                kula.makeMove();
+                                Thread.Sleep(10);
+                            }
                         }
                     });
-                    thread.Start();
+                    tasks.Add(task);
                 }
             }
 
@@ -58,6 +62,7 @@ namespace Logika
             public override void turnOff()
             {
                 this.obszar.IsRunning = false;
+                disposeOfThreads();
             }
             public override void turnOn() 
             {
@@ -66,6 +71,13 @@ namespace Logika
             public override bool isRunning()
             {
                 return this.obszar.IsRunning;
+            }
+            private void disposeOfThreads()
+            {
+                foreach(Task task in tasks)
+                {
+                    task.Dispose();
+                }
             }
         }
     }
