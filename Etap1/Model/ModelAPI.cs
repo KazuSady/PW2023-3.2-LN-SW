@@ -11,9 +11,9 @@ namespace Model
         }
         public abstract void CreateObszar(int height, int width, int kulaAmount, int kulaRadius);
         public abstract ObservableCollection<Okrag> GetOkragList();
-        public abstract void turnOff();
-        public abstract void turnOn();
-        public abstract bool isRunning();
+        public abstract void TurnOff();
+        public abstract void TurnOn();
+        public abstract bool IsRunning();
 
         internal sealed class ModelAPI : AbstractModelAPI
         {
@@ -50,17 +50,17 @@ namespace Model
                 return okregi;
             }
 
-            public override bool isRunning()
+            public override bool IsRunning()
             {
-                return logicAPI.isRunning();
+                return logicAPI.IsRunning();
             }
-            public override void turnOff()
+            public override void TurnOff()
             {
-                logicAPI.turnOff();
+                logicAPI.TurnOff();
             }
-            public override void turnOn()
+            public override void TurnOn()
             {
-                logicAPI.turnOn(); 
+                logicAPI.TurnOn(); 
             }
         }
     }

@@ -10,9 +10,9 @@ namespace Logika
         }
         public abstract void CreateObszar(int height, int width, int kulaAmount, int kulaRadius);
         public abstract List<Kula> GetKulaList();
-        public abstract void turnOff();
-        public abstract void turnOn();
-        public abstract bool isRunning();
+        public abstract void TurnOff();
+        public abstract void TurnOn();
+        public abstract bool IsRunning();
 
         internal sealed class LogicAPI : AbstractLogicAPI
         {
@@ -46,7 +46,7 @@ namespace Logika
                             {
                                 kula.XMovement = random.Next(-10, 10);
                                 kula.YMovement = random.Next(-10, 10);
-                                kula.makeMove();
+                                kula.MakeMove();
                                 Thread.Sleep(10);
                             }
                         }
@@ -59,16 +59,16 @@ namespace Logika
             {
                 return obszar.Kule;
             }
-            public override void turnOff()
+            public override void TurnOff()
             {
                 this.obszar.IsRunning = false;
                 disposeOfThreads();
             }
-            public override void turnOn() 
+            public override void TurnOn() 
             {
                 this.obszar.IsRunning = true;
             }
-            public override bool isRunning()
+            public override bool IsRunning()
             {
                 return this.obszar.IsRunning;
             }

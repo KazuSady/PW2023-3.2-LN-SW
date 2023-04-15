@@ -20,7 +20,7 @@ namespace Logika
             this.yMovement = 0;
         }
 
-        public void makeMove()
+        public void MakeMove()
         {
             X += xMovement;
             Y += yMovement;

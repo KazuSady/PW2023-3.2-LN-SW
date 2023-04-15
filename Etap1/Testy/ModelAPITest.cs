@@ -12,13 +12,13 @@ namespace Testy
             modelAPI.CreateObszar(400, 400, 10, 10);
             Assert.AreEqual(modelAPI.GetOkragList().Count, 10);
             Assert.AreEqual(modelAPI.GetOkragList().ElementAt(0).R, 10);
-            Assert.AreEqual(modelAPI.isRunning(), false);
+            Assert.AreEqual(modelAPI.IsRunning(), false);
 
-            modelAPI.turnOn();
-            Assert.AreEqual(modelAPI.isRunning(), true);
+            modelAPI.TurnOn();
+            Assert.AreEqual(modelAPI.IsRunning(), true);
 
-            modelAPI.turnOff();
-            Assert.AreEqual(modelAPI.isRunning(), false);
+            modelAPI.TurnOff();
+            Assert.AreEqual(modelAPI.IsRunning(), false);
         }
     }
 }

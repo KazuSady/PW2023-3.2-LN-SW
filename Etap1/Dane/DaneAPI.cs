@@ -9,12 +9,12 @@ namespace Dane
 {
     public abstract class AbstractDaneAPI
     {
-        /*
+        
         public abstract void CreateObszar(int height, int width, int kulaAmount ,int kulaRadius);
         public abstract Obszar Obszar { get; }
         public abstract List<Kula> GetKulaList();
-        public abstract void turnOff();
-        */
+        public abstract void TurnOff();
+        
         public static AbstractDaneAPI CreateApi()
         {
             return new DaneAPI();
@@ -22,7 +22,7 @@ namespace Dane
 
         internal sealed class DaneAPI : AbstractDaneAPI
         {
-            /*
+            
             private bool isRunning;
             private Obszar obszar;
             public bool Running { get { return isRunning; } set { isRunning = value; } }
@@ -32,7 +32,7 @@ namespace Dane
             {
                 return this.Obszar.Kule;
             }
-            public override void turnOff()
+            public override void TurnOff()
             {
                 this.isRunning = false;
             }
@@ -48,7 +48,7 @@ namespace Dane
                     {
                         while (this.isRunning)
                         {
-                            kula.makeMove();
+                            kula.MakeMove();
                         }
                         Thread.Sleep(10); 
                     });
@@ -56,7 +56,7 @@ namespace Dane
                 }
 
             }
-            */
+            
         }
     }
 }

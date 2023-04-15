@@ -12,13 +12,13 @@ namespace Testy
             logicAPI.CreateObszar(400, 400, 10, 10);
             Assert.AreEqual(logicAPI.GetKulaList().Count, 10);
             Assert.AreEqual(logicAPI.GetKulaList().ElementAt(0).R, 10);
-            Assert.AreEqual(false, logicAPI.isRunning());
+            Assert.AreEqual(false, logicAPI.IsRunning());
 
-            logicAPI.turnOn();
-            Assert.AreEqual(true, logicAPI.isRunning());
+            logicAPI.TurnOn();
+            Assert.AreEqual(true, logicAPI.IsRunning());
 
-            logicAPI.turnOff();
-            Assert.AreEqual(false, logicAPI.isRunning());
+            logicAPI.TurnOff();
+            Assert.AreEqual(false, logicAPI.IsRunning());
         }
     }
 }
