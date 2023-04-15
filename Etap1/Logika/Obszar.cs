@@ -1,10 +1,8 @@
-﻿
-
-using Dane;
+﻿using Dane;
 
 namespace Logika
 {
-    internal class Obszar
+    public class Obszar
     {
         private int height;
         private int width;

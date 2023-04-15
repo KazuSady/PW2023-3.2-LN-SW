@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
+﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Logika
 {
@@ -16,12 +11,13 @@ namespace Logika
         private double xMovement;
         private double yMovement;
 
-
         public Kula(double x, double y, double r)
         {
             this.x = x;
             this.y = y;
             this.r = r;
+            this.xMovement = 0;
+            this.yMovement = 0;
         }
 
         public void makeMove()

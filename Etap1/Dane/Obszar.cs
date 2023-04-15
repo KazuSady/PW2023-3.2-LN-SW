@@ -2,6 +2,7 @@
 {
     public class Obszar
     {
+        /*
         private int height;
         private int width;
         private bool isRunning = false;
@@ -55,5 +56,6 @@
         public int Width { get { return width; } }
         public List<Kula> Kule { get { return kule; } }
         public bool IsRunning { get { return isRunning; } set { isRunning = value; } }
+        */
     }
 }

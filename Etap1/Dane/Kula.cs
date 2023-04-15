@@ -1,15 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
+﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Dane
 {
+
     public class Kula 
     {
+        /*
         private double x;
         private double y;
         private double r;
@@ -68,9 +65,6 @@ namespace Dane
         { get { return movement[0]; } set { movement[0] = value; } }
         public double YMovement
         { get { return movement[1]; } set { movement[1] = value; } }
-
+        */
     }
-
-    
-
 }

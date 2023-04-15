@@ -1,11 +1,11 @@
-using Dane;
+using Logika;
 
 namespace Testy
 {
     [TestClass]
     public class KulaTest
     {
-        Kula kula = new Kula(10,10,10,10);
+        Kula kula = new Kula(10,10,10);
 
         [TestMethod]
         public void testGetter()
@@ -13,7 +13,6 @@ namespace Testy
             Assert.AreEqual(10, kula.X);
             Assert.AreEqual(10, kula.Y);
             Assert.AreEqual(10, kula.R);
-            Assert.AreEqual(10, kula.Weight);
         }
         [TestMethod]
         public void testSetter()

@@ -1,14 +1,9 @@
 ﻿using Logika;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Testy
 {
     [TestClass]
-    internal class LogicAPITest
+    public class LogicAPITest
     {
         [TestMethod]
         public void logicAPITest()
