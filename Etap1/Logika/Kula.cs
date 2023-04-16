@@ -16,8 +16,6 @@ namespace Logika
             this.x = x;
             this.y = y;
             this.r = r;
-            this.xMovement = 0;
-            this.yMovement = 0;
         }
 
         public void MakeMove()
@@ -27,11 +25,11 @@ namespace Logika
         }
 
         public double X
-        { get { return x; } set { x = value; OnPropertyChanged(); } }
+        { get { return x; } set { x = value; OnPropertyChanged("X"); } }
         public double Y
-        { get { return y; } set { y = value; OnPropertyChanged(); } }
+        { get { return y; } set { y = value; OnPropertyChanged("Y"); } }
         public double R
-        { get { return r; } set { r = value; OnPropertyChanged(); } }
+        { get { return r; } set { r = value; OnPropertyChanged("R"); } }
         public double XMovement
         { get { return xMovement; } set { xMovement = value; } }
         public double YMovement

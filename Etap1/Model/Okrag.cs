@@ -12,8 +12,8 @@ namespace Model
 
         public Okrag(Kula kula)
         {
-            this.x = kula.X - kula.R;
-            this.y = kula.Y - kula.R;
+            this.x = kula.X;
+            this.y = kula.Y;
             this.r = kula.R;
             kula.PropertyChanged += Update;
         }
@@ -23,18 +23,18 @@ namespace Model
             Kula kula = (Kula)_object;
             if (args.PropertyName == "X")
             {
-                this.x = kula.X - kula.R;
-                OnPropertyChanged(nameof(X));
+                this.X = kula.X;
+                OnPropertyChanged("X");
             }
             if (args.PropertyName == "Y")
             {
-                this.y = kula.Y - kula.R;
-                OnPropertyChanged(nameof(Y));
+                this.Y = kula.Y;
+                OnPropertyChanged("Y");
             }
             if (args.PropertyName == "R")
             {
-                this.r = kula.R;
-                OnPropertyChanged(nameof(R));
+                this.R = kula.R;
+                OnPropertyChanged("R");
             }
         }
 

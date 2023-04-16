@@ -11,11 +11,8 @@ namespace ViewModel
         public event PropertyChangedEventHandler PropertyChanged;
         private AbstractModelAPI modelAPI;
         private int ballsAmount = 1;
-        private int ballR = 30;
-        private bool isEnabled = true;
+        private int ballR = 3;
         private ObservableCollection<Okrag> okregi;
-
-        public ViewModelAPI() : this(null) { }
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
@@ -31,60 +28,45 @@ namespace ViewModel
                 {
                     ballsAmount = Convert.ToInt32(value);
                 }
-                catch
+                catch (System.FormatException)
                 {
                     ballsAmount = 0;
                 }
+                // Jeżeli wprowadzona wartość inna niż liczby, automatycznie ustaw liczbe kul na 0 
             }
         }
-
-        public bool IsEnabled
-        { get => isEnabled; 
-            set 
-            { 
-                isEnabled = value;
-                OnPropertyChanged("IsEnabled");
-                OnPropertyChanged("IsDisabled");
-            } 
-        }
-
         public ObservableCollection<Okrag> Okregi 
         {
-            get => okregi; 
+            get => okregi;
             set 
             {
                 if (value.Equals(okregi)) return;
                 okregi = value;
                 OnPropertyChanged("Okregi");
+                // Event informujący ItemsControl w View o zmianie wartości w okręgu z kolekcji Okregi
             }
+        }
+        
+        public ViewModelAPI()
+        {
+            EnableAction = new Akcja(TurnOn);
+            DisableAction = new Akcja(TurnOff);
+            this.modelAPI = AbstractModelAPI.CreateAPI();
+
         }
 
-        public ViewModelAPI(AbstractModelAPI modelAPI = null)
-        {
-            EnableAction = new Akcja(Enable);
-            DisableAction = new Akcja(Disable);
-            if (modelAPI == null)
-            {
-                this.modelAPI = AbstractModelAPI.CreateAPI();
-            }
-            else
-            {
-                this.modelAPI = modelAPI;
-            }
-        }
-        private void Enable()
+        private void TurnOn()
         { 
+
             modelAPI.CreateObszar(500, 666, ballsAmount, ballR);
             modelAPI.CreateKule();
             modelAPI.TurnOn();
-            isEnabled = true;
             Okregi = modelAPI.GetOkragList();
         }
 
-        private void Disable()
+        private void TurnOff()
         {
             modelAPI.TurnOff();
-            isEnabled = false;
         }
 
         public ICommand EnableAction { get; set; }

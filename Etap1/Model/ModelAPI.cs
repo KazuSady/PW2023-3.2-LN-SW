@@ -1,5 +1,6 @@
 ﻿using Logika;
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 
 namespace Model
 {

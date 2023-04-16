@@ -9,16 +9,12 @@
 
 
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="11*"/>
-            <RowDefinition Height="175*"/>
-        </Grid.RowDefinitions>
         <Grid.DataContext>
             <vm:ViewModelAPI/>
         </Grid.DataContext>
         <TextBox HorizontalAlignment="Center" Margin="0,10,0,0" TextWrapping="Wrap" Text="{Binding Balls, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Width="108" Height="30" FontSize="18" Grid.Row="1"/>
-        <Button Content="Start" HorizontalAlignment="Left" Margin="559,10,0,0" VerticalAlignment="Top" Width="70" Height="30" Command="{Binding EnableAction}" IsEnabled="{Binding IsEnabled}" FontSize="18" Grid.Row="1"/>
-        <Button Content="Stop" HorizontalAlignment="Left" Margin="634,10,0,0" VerticalAlignment="Top" Width="70" Height="30" Command="{Binding DisableAction}" IsEnabled="{Binding IsEnabled}" FontSize="18" Grid.Row="1"/>
+        <Button Content="Start" HorizontalAlignment="Left" Margin="559,10,0,0" VerticalAlignment="Top" Width="70" Height="30" Command="{Binding EnableAction}"  FontSize="18" Grid.Row="1"/>
+        <Button Content="Stop" HorizontalAlignment="Left" Margin="634,10,0,0" VerticalAlignment="Top" Width="70" Height="30" Command="{Binding DisableAction}"  FontSize="18" Grid.Row="1"/>
 
         <ItemsControl Width="750" Height="600" ItemsSource="{Binding Okregi}" Margin="125,28,125,72" Grid.Row="1">
             <ItemsControl.ItemsPanel>
