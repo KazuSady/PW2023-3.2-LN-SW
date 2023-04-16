@@ -10,6 +10,7 @@ namespace Testy
         {
             AbstractModelAPI modelAPI = AbstractModelAPI.CreateAPI();
             modelAPI.CreateObszar(400, 400, 10, 10);
+            modelAPI.CreateKule();
             Assert.AreEqual(modelAPI.GetOkragList().Count, 10);
             Assert.AreEqual(modelAPI.GetOkragList().ElementAt(0).R, 10);
             Assert.AreEqual(modelAPI.IsRunning(), false);

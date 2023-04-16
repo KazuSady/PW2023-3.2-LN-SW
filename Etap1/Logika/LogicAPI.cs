@@ -1,6 +1,9 @@
 ﻿using Dane;
 using System.Runtime.CompilerServices;
 
+using Dane;
+using System.Runtime.CompilerServices;
+
 namespace Logika
 {
     public abstract class AbstractLogicAPI
@@ -44,7 +47,7 @@ namespace Logika
 
                 foreach (Kula kula in obszar.Kule)
                 {
-                    Task task = Task.Run(() =>
+                    Task task = new Task(() =>
                     {
                         while (this.IsRunning())
                         {
@@ -105,6 +108,17 @@ namespace Logika
             public override void TurnOn() 
             {
                 obszar.IsRunning = true;
+                foreach (Task task in tasks)
+                {      
+                    try
+                    {
+                        task.Start();
+                    }
+                    catch
+                    {
+
+                    }
+                }
             }
             public override bool IsRunning()
             {
