@@ -17,6 +17,14 @@ namespace Testy
             logicAPI.TurnOn();
             Assert.AreEqual(true, logicAPI.IsRunning());
 
+            double prevX = logicAPI.GetKulaList().First().X;
+            double prevY = logicAPI.GetKulaList().First().Y;
+
+            Thread.Sleep(100);
+
+            Assert.AreNotEqual(logicAPI.GetKulaList().First().X, prevX);
+            Assert.AreNotEqual(logicAPI.GetKulaList().First().Y, prevY);
+
             logicAPI.TurnOff();
             Assert.AreEqual(false, logicAPI.IsRunning());
         }

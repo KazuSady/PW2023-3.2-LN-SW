@@ -1,4 +1,5 @@
 ﻿using Dane;
+using System.Runtime.CompilerServices;
 
 namespace Logika
 {
@@ -9,7 +10,8 @@ namespace Logika
             return new LogicAPI(abstractDaneAPI);
         }
         public abstract void CreateObszar(int height, int width, int kulaAmount, int kulaRadius);
-        public abstract List<Kula> GetKulaList();
+        public abstract void CreateKule();
+        public abstract List<Logika.Kula> GetKulaList();
         public abstract void TurnOff();
         public abstract void TurnOn();
         public abstract bool IsRunning();
@@ -17,7 +19,7 @@ namespace Logika
         internal sealed class LogicAPI : AbstractLogicAPI
         {
             private AbstractDaneAPI dataApi;
-            private Obszar obszar;
+            private Logika.Obszar obszar;
             private List<Task> tasks = new List<Task>();
             public LogicAPI(AbstractDaneAPI abstractDaneAPI = null)
             {
@@ -33,19 +35,35 @@ namespace Logika
 
             public override void CreateObszar(int height, int width, int kulaAmount, int kulaRadius)
             {
-                this.obszar = new Obszar(height, width);
+                obszar = new Obszar(height, width);
                 obszar.CreateKulaList(kulaAmount, kulaRadius);
-                foreach(Kula kula in obszar.Kule)
+            }
+            public override void CreateKule()
+            {
+                ThreadLocal<Random> random = new ThreadLocal<Random>(() => new Random());
+
+                foreach (Kula kula in obszar.Kule)
                 {
                     Task task = Task.Run(() =>
                     {
-                        while (this.obszar.IsRunning)
+                        while (this.IsRunning())
                         {
-                            Random random = new Random();
                             lock (kula)
                             {
-                                kula.XMovement = random.Next(-10, 10);
-                                kula.YMovement = random.Next(-10, 10);
+                                kula.XMovement = random.Value.Next(-10000, 10000) % 5;
+                                kula.YMovement = random.Value.Next(-10000, 10000) % 5;
+
+                                if (0 > (kula.X + kula.XMovement - kula.R) ||
+                                    obszar.Width < (kula.X + kula.XMovement + kula.R))
+                                {
+                                    kula.XMovement = -kula.XMovement;
+                                }
+                                if (0 > (kula.Y + kula.YMovement - kula.R) ||
+                                    obszar.Height < (kula.Y + kula.YMovement + kula.R))
+                                {
+                                    kula.YMovement = -kula.YMovement;
+                                }
+
                                 kula.MakeMove();
                                 Thread.Sleep(10);
                             }
@@ -61,23 +79,36 @@ namespace Logika
             }
             public override void TurnOff()
             {
-                this.obszar.IsRunning = false;
-                disposeOfThreads();
+                obszar.IsRunning = false;
+                bool isAllTasksCompleted = false;
+
+                while (!isAllTasksCompleted)
+                {
+                    isAllTasksCompleted = true;
+                    foreach (Task task in tasks)
+                    {
+                        if (!task.IsCompleted)
+                        {
+                            isAllTasksCompleted = false;
+                            break;
+                        }
+                    }
+                }
+
+                foreach (Task task in tasks)
+                {
+                     task.Dispose();
+                }
+                tasks.Clear();
+                obszar.Kule.Clear();
             }
             public override void TurnOn() 
             {
-                this.obszar.IsRunning = true;
+                obszar.IsRunning = true;
             }
             public override bool IsRunning()
             {
-                return this.obszar.IsRunning;
-            }
-            private void disposeOfThreads()
-            {
-                foreach(Task task in tasks)
-                {
-                    task.Dispose();
-                }
+                return obszar.IsRunning;
             }
         }
     }

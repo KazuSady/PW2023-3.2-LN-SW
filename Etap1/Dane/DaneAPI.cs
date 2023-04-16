@@ -41,20 +41,6 @@ namespace Dane
                 this.obszar = new Obszar(height, width, kulaAmount, kulaRadius);
                 
                 List<Kula> kule = GetKulaList();
-
-                foreach (Kula kula in kule)
-                {
-                    Thread thread = new Thread(() =>
-                    {
-                        while (this.isRunning)
-                        {
-                            kula.MakeMove();
-                        }
-                        Thread.Sleep(10); 
-                    });
-                    thread.Start();
-                }
-
             }
             
         }

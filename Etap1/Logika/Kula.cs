@@ -3,8 +3,8 @@ using System.Runtime.CompilerServices;
 
 namespace Logika
 {
-    public class Kula : INotifyPropertyChanged
-    {
+     public class Kula : INotifyPropertyChanged
+     {
         private double x;
         private double y;
         private double r;
@@ -24,25 +24,23 @@ namespace Logika
         {
             X += xMovement;
             Y += yMovement;
-            OnPropertyChanged("Position");
         }
 
         public double X
-        { get { return x; } set { x = value; OnPropertyChanged("X"); } }
+        { get { return x; } set { x = value; OnPropertyChanged(); } }
         public double Y
-        { get { return y; } set { y = value; OnPropertyChanged("Y"); } }
+        { get { return y; } set { y = value; OnPropertyChanged(); } }
         public double R
-        { get { return r; } set { r = value; OnPropertyChanged("R"); } }
+        { get { return r; } set { r = value; OnPropertyChanged(); } }
         public double XMovement
         { get { return xMovement; } set { xMovement = value; } }
         public double YMovement
         { get { return yMovement; } set { yMovement = value; } }
 
-
-        public event PropertyChangedEventHandler? PropertyChanged;
+        public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged([CallerMemberName] string propertyName = "")
         {
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-    }
+     }
 }

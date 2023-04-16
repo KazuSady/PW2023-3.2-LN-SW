@@ -10,6 +10,7 @@ namespace Model
             return new ModelAPI(abstractLogic); 
         }
         public abstract void CreateObszar(int height, int width, int kulaAmount, int kulaRadius);
+        public abstract void CreateKule();
         public abstract ObservableCollection<Okrag> GetOkragList();
         public abstract void TurnOff();
         public abstract void TurnOn();
@@ -34,16 +35,19 @@ namespace Model
 
             public ObservableCollection<Okrag> Okregi
             { get { return this.okregi; } set { this.okregi = value; } }
+
             public override void CreateObszar(int height, int width, int kulaAmount, int kulaRadius)
             {
                 logicAPI.CreateObszar(height, width, kulaAmount, kulaRadius);
             }
+            public override void CreateKule()
+            {
+                logicAPI.CreateKule();
+            }
             public override ObservableCollection<Okrag> GetOkragList()
             {
-                this.okregi.Clear();
-
-                List<Kula> kule = logicAPI.GetKulaList();
-                foreach (Kula kula in kule)
+                okregi.Clear();
+                foreach (Kula kula in logicAPI.GetKulaList())
                 {
                     okregi.Add(new Okrag(kula));
                 }

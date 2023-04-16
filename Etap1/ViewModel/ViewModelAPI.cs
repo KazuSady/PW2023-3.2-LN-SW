@@ -26,24 +26,20 @@ namespace ViewModel
         {
             get { return Convert.ToString(ballsAmount); }
             set 
-            { 
-                ballsAmount = Convert.ToInt32(value);
-                OnPropertyChanged("ballsAmount");
+            {
+                try
+                {
+                    ballsAmount = Convert.ToInt32(value);
+                }
+                catch
+                {
+                    ballsAmount = 0;
+                }
             }
         }
 
         public bool IsEnabled
-        {
-            get => isEnabled;
-            set
-            {
-                isEnabled = value;
-                OnPropertyChanged("IsEnabled");
-                OnPropertyChanged("IsDisabled");
-            }
-        }
-
-        public bool IsDisabled{ get { return !isEnabled; } }
+        { get => isEnabled; set { isEnabled = value; } }
 
         public ObservableCollection<Okrag> Okregi 
         {
@@ -70,8 +66,9 @@ namespace ViewModel
             }
         }
         private void Enable()
-        {
+        { 
             modelAPI.CreateObszar(500, 666, ballsAmount, ballR);
+            modelAPI.CreateKule();
             modelAPI.TurnOn();
             isEnabled = true;
             Okregi = modelAPI.GetOkragList();

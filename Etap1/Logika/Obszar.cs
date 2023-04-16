@@ -1,6 +1,4 @@
-﻿using Dane;
-
-namespace Logika
+﻿namespace Logika
 {
     public class Obszar
     {
@@ -24,7 +22,7 @@ namespace Logika
             {
                 int x = random.Next(ballsSize, this.width-ballsSize);
                 int y = random.Next(ballsSize, this.height-ballsSize);
-                this.kule.Add(new Kula(x, y, ballsSize));
+                kule.Add(new Kula(x, y, ballsSize));
             }
         }
 
