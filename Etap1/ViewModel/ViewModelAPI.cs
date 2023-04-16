@@ -11,7 +11,7 @@ namespace ViewModel
         public event PropertyChangedEventHandler PropertyChanged;
         private AbstractModelAPI modelAPI;
         private int ballsAmount = 1;
-        private int ballR = 3;
+        private int ballR = 20;
         private ObservableCollection<Okrag> okregi;
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
