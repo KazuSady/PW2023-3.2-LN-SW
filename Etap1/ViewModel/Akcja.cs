@@ -13,16 +13,15 @@ namespace ViewModel
             this.execute = execute;
             this.canExecute = canExecute;
         }
+        public bool CanExecute(object parameter) =>
+            canExecute == null || canExecute();
+        public void Execute(object parameter) => execute();
 
-        public bool CanExecute(object parameter)
+        internal void OnCanExecuteChanged()
         {
-            return true;
+            CanExecuteChanged?.Invoke(this, EventArgs.Empty);
         }
 
-        public void Execute(object parameter)
-        {
-            
-        }
     }
     
 }

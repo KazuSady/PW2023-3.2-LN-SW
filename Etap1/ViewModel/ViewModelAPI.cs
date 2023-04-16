@@ -39,7 +39,14 @@ namespace ViewModel
         }
 
         public bool IsEnabled
-        { get => isEnabled; set { isEnabled = value; } }
+        { get => isEnabled; 
+            set 
+            { 
+                isEnabled = value;
+                OnPropertyChanged("IsEnabled");
+                OnPropertyChanged("IsDisabled");
+            } 
+        }
 
         public ObservableCollection<Okrag> Okregi 
         {
