@@ -16,7 +16,7 @@
         <Button Content="Start" HorizontalAlignment="Left" Margin="559,10,0,0" VerticalAlignment="Top" Width="70" Height="30" Command="{Binding EnableAction}" IsEnabled="{Binding IsEnabled}" FontSize="18" />
         <Button Content="Stop" HorizontalAlignment="Left" Margin="634,10,0,0" VerticalAlignment="Top" Width="70" Height="30" Command="{Binding DisableAction}" IsEnabled="{Binding IsEnabled}" FontSize="18" />
 
-        <ItemsControl Width="750" Height="600" ItemsSource="{Binding Okregi}" Margin="125,28,125,72" >
+        <ItemsControl Width="750" Height="600" ItemsSource="{Binding ModelBalls}" Margin="125,28,125,72" >
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                     <Canvas Width="666" Height="500" Background="#45752e"/>

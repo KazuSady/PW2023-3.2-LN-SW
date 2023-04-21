@@ -6,29 +6,36 @@ namespace Testy
     public class ModelAPITest
     {
         [TestMethod]
-        public void modelAPITests()
+        public void logicAPIGettersTest()
         {
             AbstractModelAPI modelAPI = AbstractModelAPI.CreateAPI();
-            modelAPI.CreateObszar(400, 400, 10, 10);
-            modelAPI.CreateKule();
-            Assert.AreEqual(modelAPI.GetOkragList().Count, 10);
-            Assert.AreEqual(modelAPI.GetOkragList().ElementAt(0).R, 10);
-            Assert.AreEqual(modelAPI.IsRunning(), false);
+            modelAPI.CreateField(400, 400);
+            modelAPI.CreateBalls(10, 10);
 
+            Assert.AreEqual(false, modelAPI.IsRunning());
 
             modelAPI.TurnOn();
-            Assert.AreEqual(modelAPI.IsRunning(), true);
+            Assert.AreEqual(true, modelAPI.IsRunning());
 
-            double prevX = modelAPI.GetOkragList().First().X;
-            double prevY = modelAPI.GetOkragList().First().Y;
+            modelAPI.TurnOff();
+            Assert.AreEqual(false, modelAPI.IsRunning());
+        }
+
+        [TestMethod]
+        public void logicAPIModelBallsAreMoving()
+        {
+            AbstractModelAPI modelAPI = AbstractModelAPI.CreateAPI();
+            modelAPI.CreateField(400, 400);
+            modelAPI.CreateBalls(10, 10);
+
+            double prevX = modelAPI.GetModelBallX(0);
+            double prevY = modelAPI.GetModelBallY(0);
 
             Thread.Sleep(100);
 
-            Assert.AreNotEqual(modelAPI.GetOkragList().First().X, prevX);
-            Assert.AreNotEqual(modelAPI.GetOkragList().First().Y, prevY);
-
-            modelAPI.TurnOff();
-            Assert.AreEqual(modelAPI.IsRunning(), false);
+            Assert.AreNotEqual(prevX, modelAPI.GetModelBallX(0));
+            Assert.AreNotEqual(prevY, modelAPI.GetModelBallY(0));
         }
+        
     }
 }

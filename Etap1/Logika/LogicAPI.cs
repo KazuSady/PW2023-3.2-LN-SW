@@ -1,92 +1,108 @@
 ﻿using Dane;
+using System;
+using System.Runtime.ExceptionServices;
 
 namespace Logika
 {
     public abstract class AbstractLogicAPI
     {
-
-        public static AbstractLogicAPI CreateApi(AbstractDaneAPI abstractDaneAPI = null)
+        public static AbstractLogicAPI CreateAPI(AbstractDaneAPI abstractDaneAPI = null)
         {
             return new LogicAPI(abstractDaneAPI);
         }
-        public abstract void CreateObszar(int height, int width, int kulaAmount, int kulaRadius);
-        public abstract void CreateKule();
-        public abstract List<Logika.Kula> GetKulaList();
+        public abstract void CreateField(int height, int width);
+        public abstract void CreateBalls(int kulaAmount, int kulaRadius);
+        public abstract List<IBall> GetAllBalls();
         public abstract void TurnOff();
         public abstract void TurnOn();
         public abstract bool IsRunning();
+
+
         internal sealed class LogicAPI : AbstractLogicAPI
         {
-            private AbstractDaneAPI dataApi;
-            private Logika.Obszar obszar;
-            private List<Task> tasks = new List<Task>();
-            private SemaphoreSlim semaphore = new SemaphoreSlim(1);
+            private AbstractDaneAPI _dataAPI;
+            private Field _Field;
+            private List<Task> _Tasks = new List<Task>();
+            private SemaphoreSlim _Semaphore = new SemaphoreSlim(1);
+
+
             public LogicAPI(AbstractDaneAPI abstractDaneAPI = null)
             {
                 if (abstractDaneAPI == null)
                 {
-                    dataApi = AbstractDaneAPI.CreateApi();
+                    _dataAPI = AbstractDaneAPI.CreateApi();
                 }
                 else
                 {
-                    dataApi = abstractDaneAPI;
+                    _dataAPI = abstractDaneAPI;
+                }
+            }
+            private class Unsubscriber : IDisposable
+            {
+                private IObserver<int> _observer;
+
+                public Unsubscriber(IObserver<int> observer)
+                {
+                    this._observer = observer;
+                }
+
+                public void Dispose()
+                {
+                    _observer = null;
                 }
             }
 
-            public override void CreateObszar(int height, int width, int kulaAmount, int kulaRadius)
+
+            public override void CreateField(int height, int width)
             {
-                obszar = new Obszar(height, width);
-                obszar.CreateKulaList(kulaAmount, kulaRadius);
+                _Field = new Field(height, width);
             }
-            public override void CreateKule()
+            public override void CreateBalls(int ballsAmount, int ballRadius)
             {
+                _Field.CreateBallsList(ballsAmount, ballRadius);
                 ThreadLocal<Random> random = new ThreadLocal<Random>(() => new Random());
 
-                Parallel.ForEach(obszar.Kule, kula =>
+                for (int i = 0; i < ballsAmount; i++) 
                 {
+                    IBall ball = _Field.GetBalls().ElementAt(i);
                     Task task = new Task(async () =>
                     { 
                         while (this.IsRunning())
                         {
-                            await semaphore.WaitAsync();
+                            await _Semaphore.WaitAsync();
+                            ball.XMovement = random.Value.Next(-10000, 10000) % 5;
+                            ball.YMovement = random.Value.Next(-10000, 10000) % 5;
 
-                            kula.XMovement = random.Value.Next(-10000, 10000) % 5;
-                            kula.YMovement = random.Value.Next(-10000, 10000) % 5;
-
-                            if (0 > (kula.X + kula.XMovement - kula.R) ||
-                                obszar.Width < (kula.X + kula.XMovement + kula.R))
+                            if (0 > (ball.X + ball.XMovement - ball.R) ||
+                                _Field.Width < (ball.X + ball.XMovement + ball.R))
                             {
-                                kula.XMovement = -kula.XMovement;
+                                ball.XMovement = -ball.XMovement;
                             }
-                            if (0 > (kula.Y + kula.YMovement - kula.R) ||
-                                obszar.Height < (kula.Y + kula.YMovement + kula.R))
+                            if (0 > (ball.Y + ball.YMovement - ball.R) ||
+                                _Field.Height < (ball.Y + ball.YMovement + ball.R))
                             {
-                                kula.YMovement = -kula.YMovement;
+                                ball.YMovement = -ball.YMovement;
                             }
 
-                            kula.MakeMove();
-                            Thread.Sleep(1);
-                            semaphore.Release();
+                            ball.MakeMove();
+                            Task.Delay(10);
+                            _Semaphore.Release();
                         }
                     });
-                    tasks.Add(task);
-                });
+                    _Tasks.Add(task);
+                };
 
             }
 
-            public override List<Kula> GetKulaList()
-            {
-                return obszar.Kule;
-            }
             public override void TurnOff()
             {
-                obszar.IsRunning = false;
+                _Field.IsRunning = false;
                 bool isAllTasksCompleted = false;
 
                 while (!isAllTasksCompleted)
                 {
                     isAllTasksCompleted = true;
-                    foreach (Task task in tasks)
+                    foreach (Task task in _Tasks)
                     {
                         if (!task.IsCompleted)
                         {
@@ -96,25 +112,32 @@ namespace Logika
                     }
                 }
 
-                foreach (Task task in tasks)
+                foreach (Task task in _Tasks)
                 {
                     task.Dispose();
                 }
-                tasks.Clear();
-                obszar.Kule.Clear();
+                _Tasks.Clear();
+                _Field.ClearBalls();
             }
             public override void TurnOn()
             {
-                obszar.IsRunning = true;
-                foreach (Task task in tasks)
+                _Field.IsRunning = true;
+                foreach (Task task in _Tasks)
                 {
                     task.Start();
                 }
             }
+
+
             public override bool IsRunning()
             {
-                return obszar.IsRunning;
+                return _Field.IsRunning;
             }
+            public override List<IBall> GetAllBalls()
+            {
+                return _Field.GetBalls();
+            }
+
         }
     }
 }

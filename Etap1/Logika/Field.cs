@@ -1,35 +1,43 @@
 ﻿namespace Logika
 {
-    public class Obszar
+    public class Field
     {
         private int height;
         private int width;
-        private bool isRunning = false;
-        private List<Kula> kule = new List<Kula>();
+        private bool isRunning;
+        private List<IBall> _Balls = new List<IBall>();
 
 
-        public Obszar(int height, int width)
+        public Field(int height, int width)
         {
             this.height = height;
             this.width = width;
+            this.isRunning = false;
         }
 
-        public void CreateKulaList(int ballsAmount, int ballsSize)
+        public void CreateBallsList(int ballsAmount, int ballsSize)
         {
-            kule.Clear();
+            _Balls.Clear();
             Random random = new Random();
             for (int i = 0; i < ballsAmount; i++)
             {
                 int x = random.Next(ballsSize, this.width-ballsSize);
                 int y = random.Next(ballsSize, this.height-ballsSize);
-                kule.Add(new Kula(x, y, ballsSize));
+                _Balls.Add(new Ball(x, y, ballsSize));
             }
         }
 
+        public List<IBall> GetBalls()
+        {
+            return _Balls;
+        }
+        public void ClearBalls()
+        {
+            _Balls.Clear();
+        }
 
         public int Height { get { return height; } }
         public int Width { get { return width; } }
-        public List<Kula> Kule { get { return kule; } }
         public bool IsRunning { get { return isRunning; } set { isRunning = value; } }
     }
 }
