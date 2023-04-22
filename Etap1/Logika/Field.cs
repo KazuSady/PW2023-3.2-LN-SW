@@ -1,12 +1,11 @@
 ﻿namespace Logika
 {
-    public class Field
+    internal class Field
     {
         private int height;
         private int width;
         private bool isRunning;
         private List<IBall> _Balls = new List<IBall>();
-
 
         public Field(int height, int width)
         {

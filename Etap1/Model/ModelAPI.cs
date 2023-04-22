@@ -8,17 +8,15 @@ namespace Model
 {
     public abstract class AbstractModelAPI 
     {
-        public static AbstractModelAPI CreateAPI(AbstractLogicAPI abstractLogic = null) 
+        public static AbstractModelAPI CreateAPI(AbstractLogicAPI abstractLogicAPI = default) 
         { 
-            return new ModelAPI(abstractLogic); 
+            return new ModelAPI(abstractLogicAPI ?? AbstractLogicAPI.CreateAPI()); 
         }
         public abstract ObservableCollection<IModelBall> GetModelBalls();
 
         public abstract void TurnOff();
         public abstract void TurnOn(int height, int width, int kulaAmount, int kulaRadius);
         public abstract bool IsRunning();
-
-
 
 
         internal sealed class ModelAPI : AbstractModelAPI
@@ -28,32 +26,8 @@ namespace Model
 
             public ModelAPI(AbstractLogicAPI abstractLogicAPI) 
             {
-                if (abstractLogicAPI == null)
-                {
-                    this._logicAPI = AbstractLogicAPI.CreateAPI();  
-                }
-                else
-                {
-                    this._logicAPI = abstractLogicAPI;
-                }
+                _logicAPI = abstractLogicAPI; 
             }
-
-
-            private class Unsubscriber : IDisposable
-            {
-                private IObserver<IModelBall> _observer;
-
-                public Unsubscriber(IObserver<IModelBall> observer)
-                {
-                    _observer = observer;
-                }
-
-                public void Dispose()
-                {
-                    _observer = null;
-                }
-            }
-
 
             private void CreateField(int height, int width)
             {

@@ -10,7 +10,7 @@ namespace ViewModel
     {
         private AbstractModelAPI _modelAPI;
         private int ballsAmount = 1;
-        private int ballR = 10;
+        private int ballR = 30;
         private bool isRunning = false;
         public ObservableCollection<IModelBall> ModelBalls => _modelAPI.GetModelBalls();
 
@@ -66,6 +66,6 @@ namespace ViewModel
         }
 
         public ICommand EnableAction { get; set; }
-        public ICommand DisableAction { get; set;}
+        public ICommand DisableAction { get; set; }
     }
 }

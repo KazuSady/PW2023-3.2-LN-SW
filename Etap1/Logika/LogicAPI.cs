@@ -1,14 +1,15 @@
 ﻿using Dane;
 using System;
+using System.Runtime.CompilerServices;
 using System.Runtime.ExceptionServices;
 
 namespace Logika
 {
     public abstract class AbstractLogicAPI
     {
-        public static AbstractLogicAPI CreateAPI(AbstractDaneAPI abstractDaneAPI = null)
+        public static AbstractLogicAPI CreateAPI(AbstractDaneAPI abstractDaneAPI = default)
         {
-            return new LogicAPI(abstractDaneAPI);
+            return new LogicAPI(abstractDaneAPI ?? AbstractDaneAPI.CreateApi());
         }
         public abstract void CreateField(int height, int width);
         public abstract void CreateBalls(int kulaAmount, int kulaRadius);
@@ -25,33 +26,10 @@ namespace Logika
             private List<Task> _Tasks = new List<Task>();
             private SemaphoreSlim _Semaphore = new SemaphoreSlim(1);
 
-
-            public LogicAPI(AbstractDaneAPI abstractDaneAPI = null)
+            public LogicAPI(AbstractDaneAPI abstractDaneAPI)
             {
-                if (abstractDaneAPI == null)
-                {
-                    _dataAPI = AbstractDaneAPI.CreateApi();
-                }
-                else
-                {
-                    _dataAPI = abstractDaneAPI;
-                }
+                _dataAPI = abstractDaneAPI;
             }
-            private class Unsubscriber : IDisposable
-            {
-                private IObserver<int> _observer;
-
-                public Unsubscriber(IObserver<int> observer)
-                {
-                    this._observer = observer;
-                }
-
-                public void Dispose()
-                {
-                    _observer = null;
-                }
-            }
-
 
             public override void CreateField(int height, int width)
             {
@@ -70,22 +48,21 @@ namespace Logika
                         while (this.IsRunning())
                         {
                             await _Semaphore.WaitAsync();
-                            ball.XMovement = random.Value.Next(-10000, 10000) % 5;
-                            ball.YMovement = random.Value.Next(-10000, 10000) % 5;
+                            ball.XMovement = random.Value.Next(-10000, 10000) % 15;
+                            ball.YMovement = random.Value.Next(-10000, 10000) % 15;
 
-                            if (0 > (ball.X + ball.XMovement - ball.R) ||
+                            if (0 > (ball.X + ball.XMovement) ||
                                 _Field.Width < (ball.X + ball.XMovement + ball.R))
                             {
                                 ball.XMovement = -ball.XMovement;
                             }
-                            if (0 > (ball.Y + ball.YMovement - ball.R) ||
+                            if (0 > (ball.Y + ball.YMovement) ||
                                 _Field.Height < (ball.Y + ball.YMovement + ball.R))
                             {
                                 ball.YMovement = -ball.YMovement;
                             }
 
                             ball.MakeMove();
-                            Task.Delay(10);
                             _Semaphore.Release();
                         }
                     });
@@ -128,7 +105,6 @@ namespace Logika
                 }
             }
 
-
             public override bool IsRunning()
             {
                 return _Field.IsRunning;
@@ -137,7 +113,6 @@ namespace Logika
             {
                 return _Field.GetBalls();
             }
-
         }
     }
 }
