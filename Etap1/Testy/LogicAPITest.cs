@@ -8,7 +8,7 @@ namespace Testy
         [TestMethod]
         public void logicAPITurnOnTurnOffTest()
         {
-            AbstractLogicAPI logicAPI = AbstractLogicAPI.CreateAPI();
+            AbstracDataAPI logicAPI = AbstracDataAPI.CreateAPI();
             logicAPI.CreateField(400, 400);
             Assert.AreEqual(false, logicAPI.IsRunning());
 
@@ -21,16 +21,27 @@ namespace Testy
         [TestMethod]
         public void logicAPICreateBallsTest()
         {
-            AbstractLogicAPI logicAPI = AbstractLogicAPI.CreateAPI();
+            AbstracDataAPI logicAPI = AbstracDataAPI.CreateAPI();
             logicAPI.CreateField(400, 400);
             logicAPI.CreateBalls(10, 10);
-            Assert.AreEqual(false, logicAPI.IsRunning());
+            Assert.IsTrue(10 == logicAPI.GetAllBalls().Count);
+        }
+
+        [TestMethod]
+        public void logicAPIBallsMovingTest()
+        {
+            AbstracDataAPI logicAPI = AbstracDataAPI.CreateAPI();
+            logicAPI.CreateField(400, 400);
+            logicAPI.CreateBalls(10, 10);
+            int prevX = logicAPI.GetAllBalls().First().Position.X;
+            int prevY = logicAPI.GetAllBalls().First().Position.Y;
 
             logicAPI.TurnOn();
-            Assert.AreEqual(true, logicAPI.IsRunning());
+            Thread.Sleep(100);
 
-            logicAPI.TurnOff();
-            Assert.AreEqual(false, logicAPI.IsRunning());
+            Assert.IsFalse(prevX == logicAPI.GetAllBalls().First().Position.X);
+            Assert.IsFalse(prevY == logicAPI.GetAllBalls().First().Position.Y);
+
         }
 
     }

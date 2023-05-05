@@ -1,42 +1,37 @@
-﻿using Logika;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Drawing;
 using System.Runtime.CompilerServices;
+using Dane;
 
-namespace Model
+namespace Logika
 {
-    internal class ModelBall : IModelBall, INotifyPropertyChanged
-    {
+     internal class LogicBall : ILogicBall, INotifyPropertyChanged
+     {
         private Point _position;
-        private double _r;
 
-        public ModelBall(int x, int y, double r)
+        public LogicBall(int x, int y)
         {
             this._position = new Point(x, y);
-            this._r = r;
         }
 
         public override Point Position
         { get { return _position; } set { _position = value; OnPropertyChanged(); } }
 
-        public override double R 
-        { get => _r; }
-
         public override void Update(object obj, PropertyChangedEventArgs args)
         {
-            ILogicBall ball = (ILogicBall)obj;
+            IBall ball = (IBall)obj;
 
             if (args.PropertyName == "Position")
             {
                 this.Position = ball.Position;
             }
+
         }
+
         public override event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged([CallerMemberName] string propertyName = "")
         {
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-
-    }
-    
+     }
 }

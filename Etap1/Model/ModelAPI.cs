@@ -1,16 +1,13 @@
 ﻿using Logika;
 using System.Collections.ObjectModel;
-using System.Numerics;
-using System.Security.Cryptography.X509Certificates;
-using System.Threading.Tasks;
 
 namespace Model
 {
     public abstract class AbstractModelAPI 
     {
-        public static AbstractModelAPI CreateAPI(AbstractLogicAPI abstractLogicAPI = default) 
+        public static AbstractModelAPI CreateAPI(AbstracDataAPI abstractLogicAPI = default) 
         { 
-            return new ModelAPI(abstractLogicAPI ?? AbstractLogicAPI.CreateAPI()); 
+            return new ModelAPI(abstractLogicAPI ?? AbstracDataAPI.CreateAPI()); 
         }
         public abstract ObservableCollection<IModelBall> GetModelBalls();
 
@@ -21,43 +18,45 @@ namespace Model
 
         internal sealed class ModelAPI : AbstractModelAPI
         {
-            private AbstractLogicAPI _logicAPI;
+            private AbstracDataAPI _logicAPI;
             private ObservableCollection<IModelBall> _ModelBalls = new ObservableCollection<IModelBall>();
-
-            public ModelAPI(AbstractLogicAPI abstractLogicAPI) 
+            public ModelAPI(AbstracDataAPI abstractLogicAPI) 
             {
                 _logicAPI = abstractLogicAPI; 
             }
+
+
 
             private void CreateField(int height, int width)
             {
                 _logicAPI.CreateField(height, width);
             }
-            private void CreateBalls(int kulaAmount, int kulaRadius)
-            {
+            private void CreateBalls(int ballAmount, int ballRadius)
+            {         
                 _ModelBalls.Clear();
-                _logicAPI.CreateBalls(kulaAmount, kulaRadius);
-                foreach (IBall ball in _logicAPI.GetAllBalls())
+                _logicAPI.CreateBalls(ballAmount, ballRadius);
+                foreach (ILogicBall logicBall in _logicAPI.GetAllBalls())
                 {
-                    IModelBall modelBall = IModelBall.CreateModelBall(ball.X, ball.Y, ball.R);
+                    IModelBall modelBall = IModelBall.CreateModelBall(logicBall.Position.X, logicBall.Position.Y, ballRadius);
                     _ModelBalls.Add(modelBall);
-                    ball.PropertyChanged += modelBall.Update!;
+                    logicBall.PropertyChanged += modelBall.Update!;
                 }
             }
             public override ObservableCollection<IModelBall> GetModelBalls()
             {
                 return _ModelBalls;
             }
+
+
  
-
-
             public override bool IsRunning()
             {
                 return _logicAPI.IsRunning();
             }
             public override void TurnOff()
             {
-
+                _logicAPI.ClearBalls();
+                _ModelBalls.Clear();
                 _logicAPI.TurnOff();
             }
             public override void TurnOn(int height, int width, int kulaAmount, int kulaRadius)

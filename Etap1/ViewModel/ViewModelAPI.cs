@@ -49,6 +49,7 @@ namespace ViewModel
 
         private void TurnOn()
         {
+
             if (isRunning)
             {
                 _modelAPI.TurnOff();
@@ -60,6 +61,7 @@ namespace ViewModel
 
         private void TurnOff()
         {
+            
             _modelAPI.TurnOff();
             isRunning = false;
             OnPropertyChanged("ModelBalls");

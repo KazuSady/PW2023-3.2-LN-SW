@@ -1,16 +1,16 @@
 ﻿using System.ComponentModel;
+using System.Drawing;
 
 namespace Model
 {
     public abstract class IModelBall
     {
-        public static IModelBall CreateModelBall(double x, double y, double r)
+        public static IModelBall CreateModelBall(int x, int y, double r)
         {
             return new ModelBall(x, y, r);
         }
 
-        public abstract double X { get; set; }
-        public abstract double Y { get; set; }
+        public abstract Point Position { get; set; }
         public abstract double R { get; }
 
         public abstract void Update(Object s, PropertyChangedEventArgs e);
