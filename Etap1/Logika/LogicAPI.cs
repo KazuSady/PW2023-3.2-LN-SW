@@ -8,8 +8,8 @@ using System.Runtime.ExceptionServices;
 
 namespace Logika
 {
-    public abstract class AbstracDataAPI 
-    { 
+    public abstract class AbstracDataAPI
+    {
         public static AbstracDataAPI CreateAPI(AbstractDataAPI abstractDataAPI = default)
         {
             return new LogicAPI(abstractDataAPI ?? AbstractDataAPI.CreateApi());
@@ -29,7 +29,6 @@ namespace Logika
             private AbstractDataAPI _dataAPI;
             private List<Task> _Tasks = new List<Task>();
             private List<ILogicBall> _logicBalls = new List<ILogicBall>();
-            private readonly object locked = new object();
 
 
             public LogicAPI(AbstractDataAPI abstractDataAPI)
@@ -107,12 +106,12 @@ namespace Logika
             public override void TurnOn()
             {
                 _dataAPI.TurnOn();
-                
+
                 foreach (Task task in _Tasks)
                 {
                     task.Start();
                 }
-                
+
             }
             public override bool IsRunning()
             {
@@ -128,16 +127,20 @@ namespace Logika
                 ThreadLocal<Random> random = new ThreadLocal<Random>(() => new Random());
                 while (_dataAPI.IsRunning())
                 {
-                    ballCollision(ball, ballRadius);
-                    wallColission(ball, ballRadius);
                     lock (ball)
                     {
+                        if (checkCollision(ball, ballRadius))
+                        {
+                            ballCollision(ball, ballRadius);
+                        }
+                        wallColission(ball, ballRadius);
                         ball.MakeMove();
+                        double speed = Math.Sqrt(Math.Pow(ball.XMovement, 2) + Math.Pow(ball.YMovement, 2));
+                        Task.Delay((int)speed).Wait();
                     }
-                    Task.Delay(50).Wait();
                 }
             }
-            private void wallColission (IBall ball, int ballRadius)
+            private void wallColission(IBall ball, int ballRadius)
             {
                 if (0 > (ball.Position.X + ball.XMovement) ||
                     _dataAPI.GetSceneWidth() < (ball.Position.X + ball.XMovement + ballRadius))
@@ -157,11 +160,11 @@ namespace Logika
                 {
                     if (otherBall != ball)
                     {
-                        int xDistance = ball.Position.X - otherBall.Position.X;
-                        int yDistance = ball.Position.Y - otherBall.Position.Y;
+                        int xDistance = ball.Position.X + ball.XMovement - otherBall.Position.X - otherBall.XMovement;
+                        int yDistance = ball.Position.Y + ball.YMovement - otherBall.Position.Y - otherBall.YMovement;
                         double distance = Math.Sqrt(Math.Pow(xDistance, 2) + Math.Pow(yDistance, 2));
 
-                        if ( distance <= (ballRadius) )
+                        if (distance <= (ballRadius))
                         {
                             int newXMovement = (2 * weight * ball.XMovement) / (2 * weight);
                             ball.XMovement = (2 * weight * otherBall.XMovement) / (2 * weight);
@@ -170,11 +173,28 @@ namespace Logika
                             int newYMovement = (2 * weight * ball.YMovement) / (2 * weight);
                             ball.YMovement = (2 * weight * otherBall.YMovement) / (2 * weight);
                             otherBall.YMovement = newYMovement;
-
                         }
                     }
                 }
+            }
 
+            private bool checkCollision(IBall ball, int ballRadius)
+            {
+                foreach (IBall otherBall in _dataAPI.GetAllBalls())
+                {
+                    if (otherBall != ball)
+                    {
+                        int xDistance = ball.Position.X - otherBall.Position.X;
+                        int yDistance = ball.Position.Y - otherBall.Position.Y;
+                        double distance = Math.Sqrt(Math.Pow(xDistance, 2) + Math.Pow(yDistance, 2));
+
+                        if (distance <= (ballRadius))
+                        {
+                            return true;
+                        }
+                    }
+                }
+                return false;
             }
 
         }
