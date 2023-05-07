@@ -66,7 +66,7 @@ namespace Logika
 
                     Task task = new Task(async () =>
                     {
-                        startMovement(ball, ballRadius);
+                        StartMovement(ball, ballRadius);
                     });
                     _Tasks.Add(task);
                 }
@@ -122,25 +122,25 @@ namespace Logika
                 return this._logicBalls;
             }
 
-            private async void startMovement(IBall ball, int ballRadius)
+            private async void StartMovement(IBall ball, int ballRadius)
             {
                 ThreadLocal<Random> random = new ThreadLocal<Random>(() => new Random());
                 while (_dataAPI.IsRunning())
                 {
                     lock (ball)
                     {
-                        if (checkCollision(ball, ballRadius))
+                        if (CheckCollision(ball, ballRadius))
                         {
-                            ballCollision(ball, ballRadius);
+                            BallCollision(ball, ballRadius);
                         }
-                        wallColission(ball, ballRadius);
+                        WallColission(ball, ballRadius);
                         ball.MakeMove();
                         double speed = Math.Sqrt(Math.Pow(ball.XMovement, 2) + Math.Pow(ball.YMovement, 2));
                         Task.Delay((int)speed).Wait();
                     }
                 }
             }
-            private void wallColission(IBall ball, int ballRadius)
+            private void WallColission(IBall ball, int ballRadius)
             {
                 if (0 > (ball.Position.X + ball.XMovement) ||
                     _dataAPI.GetSceneWidth() < (ball.Position.X + ball.XMovement + ballRadius))
@@ -153,7 +153,7 @@ namespace Logika
                     ball.YMovement = -ball.YMovement;
                 }
             }
-            private void ballCollision(IBall ball, int ballRadius)
+            private void BallCollision(IBall ball, int ballRadius)
             {
                 int weight = 1;
                 foreach (IBall otherBall in _dataAPI.GetAllBalls())
@@ -178,7 +178,7 @@ namespace Logika
                 }
             }
 
-            private bool checkCollision(IBall ball, int ballRadius)
+            private bool CheckCollision(IBall ball, int ballRadius)
             {
                 foreach (IBall otherBall in _dataAPI.GetAllBalls())
                 {

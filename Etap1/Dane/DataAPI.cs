@@ -38,15 +38,15 @@ namespace Dane
             }
             public override List<IBall> GetAllBalls()
             {
-                return _ballList.getAllBalls();
+                return _ballList.GetAllBalls();
             }
             public override void CreateBall(Point startPosistion)
             {
-                _ballList.addBall(startPosistion);
+                _ballList.AddBall(startPosistion);
             }
             public override void ClearBalls()
             {
-                _ballList.clearBalls();
+                _ballList.ClearBalls();
             }
 
 

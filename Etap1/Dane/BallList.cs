@@ -16,17 +16,17 @@ namespace Dane
             _ballList = new List<IBall>();
         }
 
-        public void addBall(Point posistion)
+        public void AddBall(Point posistion)
         {
             _ballList.Add(new Ball(posistion.X, posistion.Y));
         }
 
-        public List<IBall> getAllBalls()
+        public List<IBall> GetAllBalls()
         {
             return _ballList;
         }
 
-        public void clearBalls()
+        public void ClearBalls()
         {
             _ballList.Clear();
         }
