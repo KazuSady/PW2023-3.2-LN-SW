@@ -16,7 +16,7 @@ namespace Logika
         }
 
         public abstract Point Position { get; set; }
-        public abstract void Update(object obj, PropertyChangedEventArgs args);
+        public abstract void Update(Object o, PropertyChangedEventArgs args);
            
         public abstract event PropertyChangedEventHandler PropertyChanged;
     }

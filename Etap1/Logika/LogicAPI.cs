@@ -1,6 +1,7 @@
 ﻿using Dane;
 using Microsoft.VisualBasic;
 using System;
+using System.ComponentModel;
 using System.Drawing;
 using System.Numerics;
 using System.Runtime.CompilerServices;
@@ -16,7 +17,6 @@ namespace Logika
         }
         public abstract void CreateField(int height, int width);
         public abstract void CreateBalls(int kulaAmount, int kulaRadius);
-        public abstract void ClearBalls();
         public abstract List<ILogicBall> GetAllBalls();
         public abstract void TurnOff();
         public abstract void TurnOn();
@@ -29,6 +29,8 @@ namespace Logika
             private AbstractDataAPI _dataAPI;
             private List<Task> _Tasks = new List<Task>();
             private List<ILogicBall> _logicBalls = new List<ILogicBall>();
+            private int ballRadius;
+            private object _ballListLock = new object();
 
 
             public LogicAPI(AbstractDataAPI abstractDataAPI)
@@ -42,6 +44,7 @@ namespace Logika
             }
             public override void CreateBalls(int ballsAmount, int ballRadius)
             {
+                this.ballRadius = ballRadius;
                 int x;
                 int y;
                 Random random = new Random();
@@ -52,6 +55,7 @@ namespace Logika
                     y = random.Next(ballRadius, _dataAPI.GetSceneHeight() - ballRadius);
 
                     _dataAPI.CreateBall(new Point(x, y));
+                    
                     IBall ball = _dataAPI.GetAllBalls().ElementAt(i);
                     do
                     {
@@ -60,58 +64,25 @@ namespace Logika
                     } while (ball.XMovement == 0 || ball.YMovement == 0);
 
 
+                    ILogicBall logicBall = ILogicBall.CreateLogicBall(ball.Position.X, ball.Position.Y);
+                    ball.PropertyChanged += logicBall.Update!;
+                    ball.PropertyChanged += WallColission!;
+                    ball.PropertyChanged += CheckCollision!;
+                    
 
-                    _logicBalls.Add(ILogicBall.CreateLogicBall(ball.Position.X, ball.Position.Y));
-                    ball.PropertyChanged += _logicBalls.ElementAt(i).Update!;
-
-                    Task task = new Task(async () =>
-                    {
-                        StartMovement(ball, ballRadius);
-                    });
-                    _Tasks.Add(task);
+                    _logicBalls.Add(logicBall);
                 }
-            }
-            public override void ClearBalls()
-            {
-                _dataAPI.ClearBalls();
-                _logicBalls.Clear();
             }
 
 
             public override void TurnOff()
             {
                 _dataAPI.TurnOff();
-                bool isAllTasksCompleted = false;
-
-                while (!isAllTasksCompleted)
-                {
-                    isAllTasksCompleted = true;
-                    foreach (Task task in _Tasks)
-                    {
-                        if (!task.IsCompleted)
-                        {
-                            isAllTasksCompleted = false;
-                            break;
-                        }
-                    }
-                }
-
-                foreach (Task task in _Tasks)
-                {
-                    task.Dispose();
-                }
-                _Tasks.Clear();
-                this.ClearBalls();
+                _logicBalls.Clear();
             }
             public override void TurnOn()
             {
                 _dataAPI.TurnOn();
-
-                foreach (Task task in _Tasks)
-                {
-                    task.Start();
-                }
-
             }
             public override bool IsRunning()
             {
@@ -119,29 +90,14 @@ namespace Logika
             }
             public override List<ILogicBall> GetAllBalls()
             {
-                return this._logicBalls;
+                return _logicBalls;
             }
 
-            private async void StartMovement(IBall ball, int ballRadius)
+
+            private void WallColission(Object o, PropertyChangedEventArgs args)
             {
-                ThreadLocal<Random> random = new ThreadLocal<Random>(() => new Random());
-                while (_dataAPI.IsRunning())
-                {
-                    lock (ball)
-                    {
-                        if (CheckCollision(ball, ballRadius))
-                        {
-                            BallCollision(ball, ballRadius);
-                        }
-                        WallColission(ball, ballRadius);
-                        ball.MakeMove();
-                        double speed = Math.Sqrt(Math.Pow(ball.XMovement, 2) + Math.Pow(ball.YMovement, 2));
-                        Task.Delay((int)speed).Wait();
-                    }
-                }
-            }
-            private void WallColission(IBall ball, int ballRadius)
-            {
+                IBall ball = (IBall)o;
+
                 if (0 > (ball.Position.X + ball.XMovement) ||
                     _dataAPI.GetSceneWidth() < (ball.Position.X + ball.XMovement + ballRadius))
                 {
@@ -153,34 +109,38 @@ namespace Logika
                     ball.YMovement = -ball.YMovement;
                 }
             }
-            private void BallCollision(IBall ball, int ballRadius)
+
+            private void BallCollision(IBall ball, IBall otherBall)
             {
                 int weight = 1;
-                foreach (IBall otherBall in _dataAPI.GetAllBalls())
+                if (otherBall != ball)
                 {
-                    if (otherBall != ball)
+
+                    int xDistance = ball.Position.X + ball.XMovement - otherBall.Position.X - otherBall.XMovement;
+                    int yDistance = ball.Position.Y + ball.YMovement - otherBall.Position.Y - otherBall.YMovement;
+                    double distance = Math.Sqrt(Math.Pow(xDistance, 2) + Math.Pow(yDistance, 2));
+
+                    if (distance <= (ballRadius))
                     {
-                        int xDistance = ball.Position.X + ball.XMovement - otherBall.Position.X - otherBall.XMovement;
-                        int yDistance = ball.Position.Y + ball.YMovement - otherBall.Position.Y - otherBall.YMovement;
-                        double distance = Math.Sqrt(Math.Pow(xDistance, 2) + Math.Pow(yDistance, 2));
+                        int newXMovement = (2 * weight * ball.XMovement) / (2 * weight);
+                        ball.XMovement = (2 * weight * otherBall.XMovement) / (2 * weight);
+                        otherBall.XMovement = newXMovement;
 
-                        if (distance <= (ballRadius))
-                        {
-                            int newXMovement = (2 * weight * ball.XMovement) / (2 * weight);
-                            ball.XMovement = (2 * weight * otherBall.XMovement) / (2 * weight);
-                            otherBall.XMovement = newXMovement;
+                        int newYMovement = (2 * weight * ball.YMovement) / (2 * weight);
+                        ball.YMovement = (2 * weight * otherBall.YMovement) / (2 * weight);
+                        otherBall.YMovement = newYMovement;
 
-                            int newYMovement = (2 * weight * ball.YMovement) / (2 * weight);
-                            ball.YMovement = (2 * weight * otherBall.YMovement) / (2 * weight);
-                            otherBall.YMovement = newYMovement;
-                        }
                     }
                 }
+                
+               
             }
 
-            private bool CheckCollision(IBall ball, int ballRadius)
+            private void CheckCollision(Object o, PropertyChangedEventArgs args)
             {
-                foreach (IBall otherBall in _dataAPI.GetAllBalls())
+
+                IBall ball = (IBall)o;
+                foreach (IBall otherBall in _dataAPI.GetAllBalls().ToArray())
                 {
                     if (otherBall != ball)
                     {
@@ -190,12 +150,18 @@ namespace Logika
 
                         if (distance <= (ballRadius))
                         {
-                            return true;
+                            lock (ball)
+                            {
+                                BallCollision(ball, otherBall);
+                            }
                         }
                     }
                 }
-                return false;
+                
+                
+                
             }
+
 
         }
     }

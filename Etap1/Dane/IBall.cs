@@ -18,8 +18,9 @@ namespace Dane
         public abstract Point Position { get; set; }
         public abstract int XMovement { get; set; }
         public abstract int YMovement { get; set; }
+        public abstract bool IsRunning { get; set; }
+        public abstract void TurnOff();
 
-        public abstract void MakeMove();
         public abstract event PropertyChangedEventHandler PropertyChanged;
 
     }

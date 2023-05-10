@@ -28,6 +28,11 @@ namespace Dane
 
         public void ClearBalls()
         {
+            foreach (IBall ball in _ballList)
+            {
+                ball.IsRunning = false;
+                ball.TurnOff();
+            }
             _ballList.Clear();
         }
 

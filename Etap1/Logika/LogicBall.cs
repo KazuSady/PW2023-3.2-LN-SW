@@ -17,9 +17,9 @@ namespace Logika
         public override Point Position
         { get { return _position; } set { _position = value; OnPropertyChanged(); } }
 
-        public override void Update(object obj, PropertyChangedEventArgs args)
+        public override void Update(Object o, PropertyChangedEventArgs args)
         {
-            IBall ball = (IBall)obj;
+            IBall ball = (IBall)o;
 
             if (args.PropertyName == "Position")
             {

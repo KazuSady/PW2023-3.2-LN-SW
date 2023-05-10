@@ -55,7 +55,6 @@ namespace Model
             }
             public override void TurnOff()
             {
-                _logicAPI.ClearBalls();
                 _ModelBalls.Clear();
                 _logicAPI.TurnOff();
             }

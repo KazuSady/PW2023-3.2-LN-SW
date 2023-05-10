@@ -14,7 +14,6 @@ namespace Dane
         public abstract void CreateScene(int height, int width);
         public abstract List<IBall> GetAllBalls();
         public abstract void CreateBall(Point startPosistion);
-        public abstract void ClearBalls();
         public abstract int GetSceneWidth();
         public abstract int GetSceneHeight();
         public abstract void TurnOff();
@@ -44,11 +43,6 @@ namespace Dane
             {
                 _ballList.AddBall(startPosistion);
             }
-            public override void ClearBalls()
-            {
-                _ballList.ClearBalls();
-            }
-
 
             public override int GetSceneWidth()
             {
@@ -59,9 +53,9 @@ namespace Dane
                 return _scene.Height;
             }
 
-
             public override void TurnOff()
             {
+                _ballList.ClearBalls();
                 _scene.IsRunning = false;
             }
             public override void TurnOn()
