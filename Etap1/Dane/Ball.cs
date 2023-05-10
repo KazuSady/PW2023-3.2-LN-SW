@@ -28,7 +28,7 @@ namespace Dane
             this.Position = new Point(newX, newY);
         }
 
-        private void StartMovement()
+        private async void StartMovement()
         {
             _isRunning = true;
             while (_isRunning)
@@ -38,8 +38,8 @@ namespace Dane
                     MakeMove();
                 }
                 double speed = Math.Sqrt(Math.Pow(this.XMovement, 2) + Math.Pow(this.YMovement, 2));
-                Task.Delay((int)speed).Wait();
-            }
+                await Task.Delay((int)speed);
+            }   
         }
 
 

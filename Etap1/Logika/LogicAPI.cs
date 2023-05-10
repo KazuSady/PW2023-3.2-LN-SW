@@ -53,7 +53,7 @@ namespace Logika
 
                     x = random.Next(ballRadius, _dataAPI.GetSceneWidth() - ballRadius);
                     y = random.Next(ballRadius, _dataAPI.GetSceneHeight() - ballRadius);
-
+                    
                     _dataAPI.CreateBall(new Point(x, y));
                     
                     IBall ball = _dataAPI.GetAllBalls().ElementAt(i);
@@ -65,12 +65,11 @@ namespace Logika
 
 
                     ILogicBall logicBall = ILogicBall.CreateLogicBall(ball.Position.X, ball.Position.Y);
-                    ball.PropertyChanged += logicBall.Update!;
                     ball.PropertyChanged += WallColission!;
+                    ball.PropertyChanged += logicBall.Update!;
                     ball.PropertyChanged += CheckCollision!;
-                    
-
                     _logicBalls.Add(logicBall);
+
                 }
             }
 
