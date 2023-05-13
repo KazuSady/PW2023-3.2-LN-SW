@@ -9,9 +9,9 @@ using System.Runtime.ExceptionServices;
 
 namespace Logika
 {
-    public abstract class AbstracDataAPI
+    public abstract class AbstractLogicAPI
     {
-        public static AbstracDataAPI CreateAPI(AbstractDataAPI abstractDataAPI = default)
+        public static AbstractLogicAPI CreateAPI(AbstractDataAPI abstractDataAPI = default)
         {
             return new LogicAPI(abstractDataAPI ?? AbstractDataAPI.CreateApi());
         }
@@ -24,18 +24,23 @@ namespace Logika
 
 
 
-        internal sealed class LogicAPI : AbstracDataAPI
+        internal sealed class LogicAPI : AbstractLogicAPI
         {
             private AbstractDataAPI _dataAPI;
-            private List<Task> _Tasks = new List<Task>();
-            private List<ILogicBall> _logicBalls = new List<ILogicBall>();
+            private List<ILogicBall> _logicBalls;
             private int ballRadius;
-            private object _ballListLock = new object();
-
 
             public LogicAPI(AbstractDataAPI abstractDataAPI)
             {
-                _dataAPI = abstractDataAPI;
+                if (abstractDataAPI == null)
+                {
+                    _dataAPI = AbstractDataAPI.CreateApi();
+                }
+                else
+                {
+                    _dataAPI = abstractDataAPI;
+                }
+                _logicBalls = new List<ILogicBall>();
             }
 
             public override void CreateField(int height, int width)
@@ -53,9 +58,9 @@ namespace Logika
 
                     x = random.Next(ballRadius, _dataAPI.GetSceneWidth() - ballRadius);
                     y = random.Next(ballRadius, _dataAPI.GetSceneHeight() - ballRadius);
-                    
+
                     _dataAPI.CreateBall(new Point(x, y));
-                    
+
                     IBall ball = _dataAPI.GetAllBalls().ElementAt(i);
                     do
                     {
@@ -65,14 +70,13 @@ namespace Logika
 
 
                     ILogicBall logicBall = ILogicBall.CreateLogicBall(ball.Position.X, ball.Position.Y);
-                    ball.PropertyChanged += WallColission!;
                     ball.PropertyChanged += logicBall.Update!;
+                    ball.PropertyChanged += WallColission!;
                     ball.PropertyChanged += CheckCollision!;
                     _logicBalls.Add(logicBall);
 
                 }
             }
-
 
             public override void TurnOff()
             {
@@ -93,7 +97,7 @@ namespace Logika
             }
 
 
-            private void WallColission(Object o, PropertyChangedEventArgs args)
+            private void WallColission(Object o, DataEvent args)
             {
                 IBall ball = (IBall)o;
 
@@ -114,7 +118,6 @@ namespace Logika
                 int weight = 1;
                 if (otherBall != ball)
                 {
-
                     int xDistance = ball.Position.X + ball.XMovement - otherBall.Position.X - otherBall.XMovement;
                     int yDistance = ball.Position.Y + ball.YMovement - otherBall.Position.Y - otherBall.YMovement;
                     double distance = Math.Sqrt(Math.Pow(xDistance, 2) + Math.Pow(yDistance, 2));
@@ -128,16 +131,12 @@ namespace Logika
                         int newYMovement = (2 * weight * ball.YMovement) / (2 * weight);
                         ball.YMovement = (2 * weight * otherBall.YMovement) / (2 * weight);
                         otherBall.YMovement = newYMovement;
-
                     }
                 }
-                
-               
             }
 
-            private void CheckCollision(Object o, PropertyChangedEventArgs args)
+            private void CheckCollision(Object o, DataEvent args)
             {
-
                 IBall ball = (IBall)o;
                 foreach (IBall otherBall in _dataAPI.GetAllBalls().ToArray())
                 {
@@ -156,12 +155,7 @@ namespace Logika
                         }
                     }
                 }
-                
-                
-                
             }
-
-
         }
     }
 }

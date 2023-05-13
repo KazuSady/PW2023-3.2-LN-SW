@@ -3,11 +3,11 @@ using System.Collections.ObjectModel;
 
 namespace Model
 {
-    public abstract class AbstractModelAPI 
+    public abstract class AbstractModelAPI
     {
-        public static AbstractModelAPI CreateAPI(AbstracDataAPI abstractLogicAPI = default) 
-        { 
-            return new ModelAPI(abstractLogicAPI ?? AbstracDataAPI.CreateAPI()); 
+        public static AbstractModelAPI CreateAPI(AbstractLogicAPI abstractLogicAPI = default)
+        {
+            return new ModelAPI(abstractLogicAPI ?? AbstractLogicAPI.CreateAPI());
         }
         public abstract ObservableCollection<IModelBall> GetModelBalls();
 
@@ -18,11 +18,18 @@ namespace Model
 
         internal sealed class ModelAPI : AbstractModelAPI
         {
-            private AbstracDataAPI _logicAPI;
+            private AbstractLogicAPI _logicAPI;
             private ObservableCollection<IModelBall> _ModelBalls = new ObservableCollection<IModelBall>();
-            public ModelAPI(AbstracDataAPI abstractLogicAPI) 
+            public ModelAPI(AbstractLogicAPI abstractLogicAPI)
             {
-                _logicAPI = abstractLogicAPI; 
+                if (abstractLogicAPI == null)
+                {
+                    _logicAPI = AbstractLogicAPI.CreateAPI();
+                }
+                else
+                {
+                    _logicAPI = abstractLogicAPI;
+                }
             }
 
 
@@ -32,7 +39,7 @@ namespace Model
                 _logicAPI.CreateField(height, width);
             }
             private void CreateBalls(int ballAmount, int ballRadius)
-            {         
+            {
                 _ModelBalls.Clear();
                 _logicAPI.CreateBalls(ballAmount, ballRadius);
                 foreach (ILogicBall logicBall in _logicAPI.GetAllBalls())
@@ -42,13 +49,11 @@ namespace Model
                     logicBall.PropertyChanged += modelBall.Update!;
                 }
             }
+
             public override ObservableCollection<IModelBall> GetModelBalls()
             {
                 return _ModelBalls;
             }
-
-
- 
             public override bool IsRunning()
             {
                 return _logicAPI.IsRunning();
@@ -62,7 +67,7 @@ namespace Model
             {
                 CreateField(height, width);
                 CreateBalls(kulaAmount, kulaRadius);
-                _logicAPI.TurnOn(); 
+                _logicAPI.TurnOn();
             }
 
         }

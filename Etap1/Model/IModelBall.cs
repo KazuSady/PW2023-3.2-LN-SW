@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using Logika;
+using System.ComponentModel;
 using System.Drawing;
 
 namespace Model
@@ -13,7 +14,7 @@ namespace Model
         public abstract Point Position { get; set; }
         public abstract double R { get; }
 
-        public abstract void Update(Object s, PropertyChangedEventArgs e);
+        public abstract void Update(Object s, LogicEvent e);
 
         public abstract event PropertyChangedEventHandler PropertyChanged;
 

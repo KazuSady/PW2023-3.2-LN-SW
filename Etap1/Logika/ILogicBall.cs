@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Dane;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
@@ -16,8 +17,8 @@ namespace Logika
         }
 
         public abstract Point Position { get; set; }
-        public abstract void Update(Object o, PropertyChangedEventArgs args);
-           
-        public abstract event PropertyChangedEventHandler PropertyChanged;
+        public abstract void Update(Object o, DataEvent args);
+
+        public abstract event EventHandler<LogicEvent> PropertyChanged;
     }
 }

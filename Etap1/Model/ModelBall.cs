@@ -19,24 +19,21 @@ namespace Model
         public override Point Position
         { get { return _position; } set { _position = value; OnPropertyChanged(); } }
 
-        public override double R 
+        public override double R
         { get => _r; }
 
-        public override void Update(object obj, PropertyChangedEventArgs args)
+        public override void Update(object obj, LogicEvent args)
         {
             ILogicBall ball = (ILogicBall)obj;
+            this.Position = ball.Position;
 
-            if (args.PropertyName == "Position")
-            {
-                this.Position = ball.Position;
-            }
         }
-        public override event PropertyChangedEventHandler PropertyChanged;
+        public override event PropertyChangedEventHandler? PropertyChanged;
         protected void OnPropertyChanged([CallerMemberName] string propertyName = "")
         {
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
     }
-    
+
 }
