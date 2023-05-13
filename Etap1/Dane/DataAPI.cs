@@ -10,7 +10,7 @@ namespace Dane
 {
     public abstract class AbstractDataAPI
     {
-        
+
         public abstract void CreateScene(int height, int width);
         public abstract List<IBall> GetAllBalls();
         public abstract void CreateBall(Point startPosistion);
@@ -21,19 +21,27 @@ namespace Dane
         public abstract bool IsRunning();
 
         public static AbstractDataAPI CreateApi()
-        { 
+        {
             return new DataAPI();
         }
 
         internal sealed class DataAPI : AbstractDataAPI
         {
-            private BallList _ballList = new BallList();
-            private Scene _scene;
+            private BallList _ballList;
+            private int sceneHeight;
+            private int sceneWidth;
+            private bool isRunning;
 
+            public DataAPI()
+            {
+                _ballList = new BallList();
+                isRunning = false;
+            }
 
             public override void CreateScene(int height, int width)
             {
-                _scene = new Scene(height, width);
+                sceneHeight = height;
+                sceneWidth = width;
             }
             public override List<IBall> GetAllBalls()
             {
@@ -41,30 +49,31 @@ namespace Dane
             }
             public override void CreateBall(Point startPosistion)
             {
-                _ballList.AddBall(startPosistion);
+                Ball ball = new Ball(startPosistion.X, startPosistion.Y);
+                _ballList.AddBall(ball);
             }
 
             public override int GetSceneWidth()
             {
-                return _scene.Width;
+                return sceneWidth;
             }
             public override int GetSceneHeight()
             {
-                return _scene.Height;
+                return sceneHeight;
             }
 
             public override void TurnOff()
             {
                 _ballList.ClearBalls();
-                _scene.IsRunning = false;
+                isRunning = false;
             }
             public override void TurnOn()
             {
-                _scene.IsRunning = true;
+                isRunning = true;
             }
             public override bool IsRunning()
             {
-                return _scene.IsRunning;  
+                return isRunning;
             }
         }
     }

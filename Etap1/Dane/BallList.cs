@@ -11,14 +11,14 @@ namespace Dane
     {
         private List<IBall> _ballList;
 
-        public BallList() 
-        { 
+        public BallList()
+        {
             _ballList = new List<IBall>();
         }
 
-        public void AddBall(Point posistion)
+        public void AddBall(Ball ball)
         {
-            _ballList.Add(new Ball(posistion.X, posistion.Y));
+            _ballList.Add(ball);
         }
 
         public List<IBall> GetAllBalls()
@@ -30,7 +30,6 @@ namespace Dane
         {
             foreach (IBall ball in _ballList)
             {
-                ball.IsRunning = false;
                 ball.TurnOff();
             }
             _ballList.Clear();

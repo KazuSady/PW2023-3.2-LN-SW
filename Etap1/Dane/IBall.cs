@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Drawing;
 
 namespace Dane
 {
@@ -21,7 +15,7 @@ namespace Dane
         public abstract bool IsRunning { get; set; }
         public abstract void TurnOff();
 
-        public abstract event PropertyChangedEventHandler PropertyChanged;
+        public abstract event EventHandler<DataEvent> PropertyChanged;
 
     }
 }
