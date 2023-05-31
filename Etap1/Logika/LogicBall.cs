@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Drawing;
+using System.Numerics;
 using System.Runtime.CompilerServices;
 using Dane;
 
@@ -7,14 +8,14 @@ namespace Logika
 {
     internal class LogicBall : ILogicBall
     {
-        private Point _position;
+        private Vector2 _position;
 
-        public LogicBall(int x, int y)
+        public LogicBall(float x, float y)
         {
-            this._position = new Point(x, y);
+            _position = new Vector2(x, y);
         }
 
-        public override Point Position
+        public override Vector2 Position
         { get { return _position; } set { _position = value; } }
 
         public override void Update(Object o, DataEvent args)

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.Metrics;
 using System.Drawing;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -13,7 +14,7 @@ namespace Dane
 
         public abstract void CreateScene(int height, int width);
         public abstract List<IBall> GetAllBalls();
-        public abstract void CreateBall(Point startPosistion);
+        public abstract void CreateBall(int id, Vector2 startPosistion);
         public abstract int GetSceneWidth();
         public abstract int GetSceneHeight();
         public abstract void TurnOff();
@@ -31,6 +32,7 @@ namespace Dane
             private int sceneHeight;
             private int sceneWidth;
             private bool isRunning;
+            private object lockObject = new object();
 
             public DataAPI()
             {
@@ -47,9 +49,9 @@ namespace Dane
             {
                 return _ballList.GetAllBalls();
             }
-            public override void CreateBall(Point startPosistion)
+            public override void CreateBall(int id, Vector2 startPosistion)
             {
-                Ball ball = new Ball(startPosistion.X, startPosistion.Y);
+                Ball ball = new Ball(id, startPosistion.X, startPosistion.Y);
                 _ballList.AddBall(ball);
             }
 

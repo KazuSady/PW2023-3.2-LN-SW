@@ -44,7 +44,7 @@ namespace Model
                 _logicAPI.CreateBalls(ballAmount, ballRadius);
                 foreach (ILogicBall logicBall in _logicAPI.GetAllBalls())
                 {
-                    IModelBall modelBall = IModelBall.CreateModelBall(logicBall.Position.X, logicBall.Position.Y, ballRadius);
+                    IModelBall modelBall = IModelBall.CreateModelBall((int)logicBall.Position.X, (int)logicBall.Position.Y, ballRadius);
                     _ModelBalls.Add(modelBall);
                     logicBall.PropertyChanged += modelBall.Update!;
                 }
@@ -63,10 +63,10 @@ namespace Model
                 _ModelBalls.Clear();
                 _logicAPI.TurnOff();
             }
-            public override void TurnOn(int height, int width, int kulaAmount, int kulaRadius)
+            public override void TurnOn(int height, int width, int ballAmount, int ballRadius)
             {
                 CreateField(height, width);
-                CreateBalls(kulaAmount, kulaRadius);
+                CreateBalls(ballAmount, ballRadius);
                 _logicAPI.TurnOn();
             }
 

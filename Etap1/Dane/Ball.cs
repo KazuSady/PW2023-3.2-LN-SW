@@ -1,28 +1,31 @@
 ﻿using System.ComponentModel;
 using System.Drawing;
+using System.Numerics;
 using System.Runtime.CompilerServices;
 
 namespace Dane
 {
     internal class Ball : IBall
     {
-        private Point _position;
-        private int _xMovement;
-        private int _yMovement;
+        public int _iD;
+        private Vector2 _Position;
+        public override Vector2 Movement { get; set; }
         private bool _isRunning = false;
 
-        public Ball(int x, int y)
+        public Ball(int id, float x, float y)
         {
-            _position = new Point(x, y);
+            _iD = id;
+            _Position = new Vector2(x, y);
             Task.Run(StartMovement);
         }
 
         private void MakeMove()
         {
-            int newX = _xMovement + _position.X;
-            int newY = _yMovement + _position.Y;
+            //Vector2 newPosition = _Position;
+            //Vector2 currMovement = Movement;
 
-            Position = new Point(newX, newY);
+            Vector2 newPosition = new Vector2(Movement.X + Position.X, Movement.Y + Position.Y);
+            _Position = newPosition;
             DataEvent args = new DataEvent(this);
             PropertyChanged?.Invoke(this, args);
         }
@@ -32,21 +35,14 @@ namespace Dane
             _isRunning = true;
             while (_isRunning)
             {
-                lock (this)
-                {
-                    MakeMove();
-                }
-                double speed = Math.Sqrt(Math.Pow(XMovement, 2) + Math.Pow(YMovement, 2));
+                MakeMove();
+                double speed = Math.Sqrt( Math.Pow(Movement.X, 2) + Math.Pow(Movement.Y, 2));
                 await Task.Delay((int)speed);
             }
         }
 
-        public override Point Position
-        { get { return _position; } set { _position = value; } }
-        public override int XMovement
-        { get { return _xMovement; } set { _xMovement = value; } }
-        public override int YMovement
-        { get { return _yMovement; } set { _yMovement = value; } }
+        public override Vector2 Position
+        { get { return _Position; } }
         public override bool IsRunning
         { get { return _isRunning; } set { _isRunning = value; } }
 

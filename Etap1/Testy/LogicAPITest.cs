@@ -1,6 +1,7 @@
 ﻿using Dane;
 using Logika;
 using System.Drawing;
+using System.Numerics;
 
 namespace Testy
 {
@@ -15,18 +16,17 @@ namespace Testy
             private bool isRunning;
             List<IBall> _ballList = new List<IBall>();
 
-            public override void CreateBall(Point startPosistion)
+            public override void CreateBall(int id, Vector2 startPosistion)
             {
                 Random random = new Random();
                 int x = random.Next(ballRadius, this.GetSceneWidth() - ballRadius);
                 int y = random.Next(ballRadius, this.GetSceneHeight() - ballRadius);
 
-                _ballList.Add(IBall.CreateBall(x, y));
+                _ballList.Add(IBall.CreateBall(1, x, y));
                 do
                 {
-                    _ballList.Last().XMovement = random.Next(-10000, 10000) % 3;
-                    _ballList.Last().YMovement = random.Next(-10000, 10000) % 3;
-                } while (_ballList.Last().XMovement == 0 || _ballList.Last().YMovement == 0);
+                    _ballList.Last().Movement = new Vector2(random.Next(-10000, 10000) % 3, random.Next(-10000, 10000) % 3);
+                } while (_ballList.Last().Movement.X == 0 || _ballList.Last().Movement.Y == 0);
 
             }
 
@@ -91,6 +91,23 @@ namespace Testy
             logicAPI.CreateField(400, 400);
             logicAPI.CreateBalls(10, 10);
             Assert.IsTrue(10 == logicAPI.GetAllBalls().Count);
+        }
+
+        [TestMethod]
+        public void logicAPILogicBallsMovement()
+        {
+            FakeDataAPI fakeDataAPI = new FakeDataAPI();
+            AbstractLogicAPI logicAPI = AbstractLogicAPI.CreateAPI(fakeDataAPI);
+            logicAPI.CreateField(400, 400);
+            logicAPI.CreateBalls(1, 10);
+
+            Vector2 prevPosition = logicAPI.GetAllBalls().Last().Position;
+
+            Thread.Sleep(2000);
+
+            Assert.AreNotEqual(prevPosition.X, logicAPI.GetAllBalls().Last().Position.X);
+            Assert.AreNotEqual(prevPosition.Y, logicAPI.GetAllBalls().Last().Position.Y);
+
         }
     }
 }

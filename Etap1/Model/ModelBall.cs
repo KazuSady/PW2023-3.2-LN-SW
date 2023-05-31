@@ -1,6 +1,7 @@
 ﻿using Logika;
 using System.ComponentModel;
 using System.Drawing;
+using System.Numerics;
 using System.Runtime.CompilerServices;
 
 namespace Model
@@ -12,8 +13,8 @@ namespace Model
 
         public ModelBall(int x, int y, double r)
         {
-            this._position = new Point(x, y);
-            this._r = r;
+            _position = new Point(x, y);
+            _r = r;
         }
 
         public override Point Position
@@ -25,7 +26,8 @@ namespace Model
         public override void Update(object obj, LogicEvent args)
         {
             ILogicBall ball = (ILogicBall)obj;
-            this.Position = ball.Position;
+            Point point = new Point((int)ball.Position.X, (int)ball.Position.Y);
+            this.Position = point;
 
         }
         public override event PropertyChangedEventHandler? PropertyChanged;

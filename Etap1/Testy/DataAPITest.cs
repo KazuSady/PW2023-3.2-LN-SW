@@ -1,5 +1,6 @@
 ﻿using Dane;
 using System.Drawing;
+using System.Numerics;
 
 namespace Testy
 {
@@ -11,7 +12,7 @@ namespace Testy
         public void dataAPIBallPOsitionTest()
         {
             AbstractDataAPI dataAPI = AbstractDataAPI.CreateApi();
-            dataAPI.CreateBall(new Point(10, 10));
+            dataAPI.CreateBall(1, new Vector2(10f, 10f));
             Assert.IsTrue(dataAPI.GetAllBalls().First().Position.X == 10);
             Assert.IsTrue(dataAPI.GetAllBalls().First().Position.Y == 10);
         }
@@ -20,33 +21,32 @@ namespace Testy
         public void DataAPIBallMovementTest()
         {
             AbstractDataAPI dataAPI = AbstractDataAPI.CreateApi();
-            dataAPI.CreateBall(new Point(10, 10));
-            dataAPI.GetAllBalls().First().YMovement = 1;
-            dataAPI.GetAllBalls().First().XMovement = 1;
+            dataAPI.CreateBall(1, new Vector2(10, 10));
+            dataAPI.GetAllBalls().First().Movement = new Vector2(1,1);
 
-            Assert.IsTrue(dataAPI.GetAllBalls().First().YMovement == 1);
-            Assert.IsTrue(dataAPI.GetAllBalls().First().XMovement == 1);
+
+            Assert.IsTrue(dataAPI.GetAllBalls().First().Movement.X == 1);
+            Assert.IsTrue(dataAPI.GetAllBalls().First().Movement.Y == 1);
         }
 
         [TestMethod]
         public void dataAPIBallsMovingTest()
         {
             AbstractDataAPI dataAPI = AbstractDataAPI.CreateApi();
-            dataAPI.CreateBall(new Point(10, 10));
+            dataAPI.CreateBall(1, new Vector2(10, 10));
             IBall ball = dataAPI.GetAllBalls().First();
 
-            ball.YMovement = 10;
-            ball.XMovement = 10;
-            Assert.IsTrue(ball.YMovement == 10);
-            Assert.IsTrue(ball.XMovement == 10);
+            Assert.IsTrue(ball.Position.X == 10);
+            Assert.IsTrue(ball.Position.Y == 10);
+            Vector2 prevMovement = ball.Position;
 
-            int prevX = ball.Position.X;
-            int prevY = ball.Position.Y;
+            ball.Movement = new Vector2(10,10);
 
+            dataAPI.TurnOn();
             Thread.Sleep(20);
 
-            Assert.AreNotEqual(prevX, ball.Position.X);
-            Assert.AreNotEqual(prevY, ball.Position.Y);
+            Assert.AreNotEqual(prevMovement.X, ball.Position.X);
+            Assert.AreNotEqual(prevMovement.Y, ball.Position.Y);
 
         }
 
@@ -71,8 +71,8 @@ namespace Testy
             dataAPI.CreateScene(400, 400);
             for (int i = 0; i < 10; i++)
             {
-                Point position = new Point(10, 10);
-                dataAPI.CreateBall(position);
+                Vector2 position = new Vector2(10, 10);
+                dataAPI.CreateBall(i, position);
             }
             Assert.IsTrue(10 == dataAPI.GetAllBalls().Count);
         }

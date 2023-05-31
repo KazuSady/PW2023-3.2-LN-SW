@@ -1,6 +1,7 @@
 ﻿using Logika;
 using System.ComponentModel;
 using System.Drawing;
+using System.Numerics;
 
 namespace Model
 {
