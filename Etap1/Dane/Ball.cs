@@ -1,7 +1,4 @@
-﻿using System.ComponentModel;
-using System.Drawing;
-using System.Numerics;
-using System.Runtime.CompilerServices;
+﻿using System.Numerics;
 
 namespace Dane
 {
@@ -15,7 +12,7 @@ namespace Dane
         public Ball(int id, float x, float y)
         {
             _iD = id;
-            _Position = new Vector2(x, y);
+            _Position = new Vector2((int)x, (int)y);
             Task.Run(StartMovement);
         }
 
@@ -24,7 +21,7 @@ namespace Dane
             //Vector2 newPosition = _Position;
             //Vector2 currMovement = Movement;
 
-            Vector2 newPosition = new Vector2(Movement.X + Position.X, Movement.Y + Position.Y);
+            Vector2 newPosition = new Vector2( (int)(Movement.X + Position.X), (int)(Movement.Y + Position.Y));
             _Position = newPosition;
             DataEvent args = new DataEvent(this);
             PropertyChanged?.Invoke(this, args);
@@ -36,7 +33,7 @@ namespace Dane
             while (_isRunning)
             {
                 MakeMove();
-                double speed = Math.Sqrt( Math.Pow(Movement.X, 2) + Math.Pow(Movement.Y, 2));
+                double speed = Math.Sqrt(Math.Pow(Movement.X, 2) + Math.Pow(Movement.Y, 2));
                 await Task.Delay((int)speed);
             }
         }

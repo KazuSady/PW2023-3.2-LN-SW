@@ -23,9 +23,8 @@ namespace Logika
         {
             private AbstractDataAPI _dataAPI;
             private List<ILogicBall> _logicBalls;
-            private Mutex _mutex = new Mutex(false);
             private int ballRadius;
-
+            internal object LockObject = new object();
             public LogicAPI(AbstractDataAPI abstractDataAPI)
             {
                 if (abstractDataAPI == null)
@@ -54,8 +53,7 @@ namespace Logika
 
                     x = random.Next(ballRadius, _dataAPI.GetSceneWidth() - ballRadius);
                     y = random.Next(ballRadius, _dataAPI.GetSceneHeight() - ballRadius);
-
-                    _dataAPI.CreateBall(i, new Vector2(x, y));
+                    _dataAPI.CreateBall(i, x, y);
 
                     IBall ball = _dataAPI.GetAllBalls().ElementAt(i);
                     do
@@ -66,13 +64,12 @@ namespace Logika
                     } while (ball.Movement.X == 0 || ball.Movement.Y == 0);
 
 
-                    ILogicBall logicBall = ILogicBall.CreateLogicBall((int)ball.Position.X, (int)ball.Position.Y);
+                    ILogicBall logicBall = ILogicBall.CreateLogicBall(ball.Position.X, ball.Position.Y);
 
-                    ball.PropertyChanged += logicBall.Update!;
                     ball.PropertyChanged += WallColission!;
                     ball.PropertyChanged += CheckCollision!;
+                    ball.PropertyChanged += logicBall.Update!;
                     _logicBalls.Add(logicBall);
-
 
                 }
             }
@@ -99,25 +96,16 @@ namespace Logika
             private void WallColission(Object o, DataEvent args)
             {
                 IBall ball = (IBall)o;
-                int newXMoventValue;
-                int newYMoventValue;
-                if (0 > (ball.Position.X + ball.Movement.X) ||
-                    _dataAPI.GetSceneWidth() < (ball.Position.X + ball.Movement.X + ballRadius))
+                float newXMoventValue = ball.Movement.X;
+                float newYMoventValue = ball.Movement.Y;
+                if (0 > (ball.Position.X + ball.Movement.X) || _dataAPI.GetSceneWidth() < (ball.Position.X + ball.Movement.X + ballRadius))
                 {
-                    newXMoventValue = (int)-ball.Movement.X;
+                    newXMoventValue = -ball.Movement.X;
                 }
-                else
+
+                if (0 > (ball.Position.Y + ball.Movement.Y) || _dataAPI.GetSceneHeight() < (ball.Position.Y + ball.Movement.Y + ballRadius))
                 {
-                    newXMoventValue = (int)ball.Movement.X;
-                }
-                if (0 > (ball.Position.Y + ball.Movement.Y) ||
-                    _dataAPI.GetSceneHeight() < (ball.Position.Y + ball.Movement.Y + ballRadius))
-                {
-                    newYMoventValue = (int)-ball.Movement.Y;
-                }
-                else
-                {
-                    newYMoventValue = (int)ball.Movement.Y;
+                    newYMoventValue = -ball.Movement.Y;
                 }
                 ball.Movement = new Vector2(newXMoventValue, newYMoventValue);
 
@@ -128,18 +116,17 @@ namespace Logika
                 int weight = 1;
                 if (otherBall != ball)
                 {
-                    int xDistance = (int)(ball.Position.X + ball.Movement.X) - (int)(otherBall.Position.X - otherBall.Movement.Y);
-                    int yDistance = (int)(ball.Position.Y + ball.Movement.Y) - (int)(otherBall.Position.Y - otherBall.Movement.Y);
+                    float xDistance = ball.Position.X + ball.Movement.X - otherBall.Position.X - otherBall.Movement.Y;
+                    float yDistance = ball.Position.Y + ball.Movement.Y - otherBall.Position.Y - otherBall.Movement.Y;
                     double distance = Math.Sqrt(Math.Pow(xDistance, 2) + Math.Pow(yDistance, 2));
 
                     if (distance <= (ballRadius))
                     {
-                
-                        int newOtherBallMovementX = (int)(2 * weight * ball.Movement.X) / (2 * weight);
-                        int newBallMovementX = (int)(2 * weight * otherBall.Movement.X) / (2 * weight);
+                        float newOtherBallMovementX = 2 * weight * ball.Movement.X / (2 * weight);
+                        float newBallMovementX = 2 * weight * otherBall.Movement.X / (2 * weight);
 
-                        int newOtherBallMovementY = (int)(2 * weight * ball.Movement.Y) / (2 * weight);
-                        int newBallMovementY = (int)(2 * weight * otherBall.Movement.Y) / (2 * weight);
+                        float newOtherBallMovementY = 2 * weight * ball.Movement.Y / (2 * weight);
+                        float newBallMovementY = 2 * weight * otherBall.Movement.Y / (2 * weight);
 
                         otherBall.Movement = new Vector2(newOtherBallMovementX, newOtherBallMovementY);
                         ball.Movement = new Vector2(newBallMovementX, newBallMovementY);
@@ -150,20 +137,28 @@ namespace Logika
 
             private void CheckCollision(Object o, DataEvent args)
             {
-                IBall ball = (IBall)o;
-                foreach (IBall otherBall in _dataAPI.GetAllBalls().ToArray())
+                try
                 {
-                    if (otherBall != ball)
+                    Monitor.Enter(LockObject);
+                    IBall ball = (IBall)o;
+                    foreach (IBall otherBall in _dataAPI.GetAllBalls().ToArray())
                     {
-                        int xDistance = (int)(ball.Position.X - otherBall.Position.X);
-                        int yDistance = (int)(ball.Position.Y - otherBall.Position.Y);
-                        double distance = Math.Sqrt(Math.Pow(xDistance, 2) + Math.Pow(yDistance, 2));
-
-                        if (distance <= (ballRadius))
+                        if (otherBall != ball)
                         {
-                            BallCollision(ball, otherBall);
+                            float xDistance = ball.Position.X - otherBall.Position.X;
+                            float yDistance = ball.Position.Y - otherBall.Position.Y;
+                            double distance = Math.Sqrt(Math.Pow(xDistance, 2) + Math.Pow(yDistance, 2));
+
+                            if (distance <= (ballRadius))
+                            {
+                                BallCollision(ball, otherBall);
+                            }
                         }
                     }
+                }
+                finally
+                {
+                    Monitor.Exit(LockObject);
                 }
             }
         }

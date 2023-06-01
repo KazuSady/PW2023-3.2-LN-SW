@@ -16,11 +16,11 @@ namespace Testy
             private bool isRunning;
             List<IBall> _ballList = new List<IBall>();
 
-            public override void CreateBall(int id, Vector2 startPosistion)
+            public override void CreateBall(int id, int x, int y)
             {
                 Random random = new Random();
-                int x = random.Next(ballRadius, this.GetSceneWidth() - ballRadius);
-                int y = random.Next(ballRadius, this.GetSceneHeight() - ballRadius);
+                x = random.Next(ballRadius, this.GetSceneWidth() - ballRadius);
+                y = random.Next(ballRadius, this.GetSceneHeight() - ballRadius);
 
                 _ballList.Add(IBall.CreateBall(1, x, y));
                 do

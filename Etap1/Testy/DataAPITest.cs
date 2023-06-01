@@ -12,7 +12,7 @@ namespace Testy
         public void dataAPIBallPOsitionTest()
         {
             AbstractDataAPI dataAPI = AbstractDataAPI.CreateApi();
-            dataAPI.CreateBall(1, new Vector2(10f, 10f));
+            dataAPI.CreateBall(1, 10, 10);
             Assert.IsTrue(dataAPI.GetAllBalls().First().Position.X == 10);
             Assert.IsTrue(dataAPI.GetAllBalls().First().Position.Y == 10);
         }
@@ -21,7 +21,7 @@ namespace Testy
         public void DataAPIBallMovementTest()
         {
             AbstractDataAPI dataAPI = AbstractDataAPI.CreateApi();
-            dataAPI.CreateBall(1, new Vector2(10, 10));
+            dataAPI.CreateBall(1, 10, 10);
             dataAPI.GetAllBalls().First().Movement = new Vector2(1,1);
 
 
@@ -33,7 +33,7 @@ namespace Testy
         public void dataAPIBallsMovingTest()
         {
             AbstractDataAPI dataAPI = AbstractDataAPI.CreateApi();
-            dataAPI.CreateBall(1, new Vector2(10, 10));
+            dataAPI.CreateBall(1, 10, 10);
             IBall ball = dataAPI.GetAllBalls().First();
 
             Assert.IsTrue(ball.Position.X == 10);
@@ -71,8 +71,7 @@ namespace Testy
             dataAPI.CreateScene(400, 400);
             for (int i = 0; i < 10; i++)
             {
-                Vector2 position = new Vector2(10, 10);
-                dataAPI.CreateBall(i, position);
+                dataAPI.CreateBall(i, 10 * i, 10 * i);
             }
             Assert.IsTrue(10 == dataAPI.GetAllBalls().Count);
         }

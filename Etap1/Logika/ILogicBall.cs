@@ -12,7 +12,7 @@ namespace Logika
 {
     public abstract class ILogicBall
     {
-        public static ILogicBall CreateLogicBall(int x, int y)
+        public static ILogicBall CreateLogicBall(float x, float y)
         {
             return new LogicBall(x, y);
         }
