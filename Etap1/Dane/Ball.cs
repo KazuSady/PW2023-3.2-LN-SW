@@ -4,24 +4,23 @@ namespace Dane
 {
     internal class Ball : IBall
     {
-        public int _iD;
+        public override int ID { get; }
         private Vector2 _Position;
         public override Vector2 Movement { get; set; }
         private bool _isRunning = false;
+        private AbstractBallLogger _logger;
 
-        public Ball(int id, float x, float y)
+        public Ball(int id, float x, float y, AbstractBallLogger logger)
         {
-            _iD = id;
-            _Position = new Vector2((int)x, (int)y);
+            ID = id;
+            _Position = new Vector2(x, y);
+            this._logger = logger;
             Task.Run(StartMovement);
         }
 
         private void MakeMove()
         {
-            //Vector2 newPosition = _Position;
-            //Vector2 currMovement = Movement;
-
-            Vector2 newPosition = new Vector2( (int)(Movement.X + Position.X), (int)(Movement.Y + Position.Y));
+            Vector2 newPosition = new Vector2(Movement.X + Position.X, Movement.Y + Position.Y);
             _Position = newPosition;
             DataEvent args = new DataEvent(this);
             PropertyChanged?.Invoke(this, args);
@@ -33,6 +32,7 @@ namespace Dane
             while (_isRunning)
             {
                 MakeMove();
+                _logger.addBallToQueue(this);
                 double speed = Math.Sqrt(Math.Pow(Movement.X, 2) + Math.Pow(Movement.Y, 2));
                 await Task.Delay((int)speed);
             }
@@ -50,6 +50,6 @@ namespace Dane
 
 
         public override event EventHandler<DataEvent> PropertyChanged;
-        
+
     }
 }

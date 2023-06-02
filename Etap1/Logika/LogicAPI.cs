@@ -24,7 +24,8 @@ namespace Logika
             private AbstractDataAPI _dataAPI;
             private List<ILogicBall> _logicBalls;
             private int ballRadius;
-            internal object LockObject = new object();
+            private object LockObject = new object();
+            private AbstractBallLogger _logger = AbstractBallLogger.CreateBallLoger();
             public LogicAPI(AbstractDataAPI abstractDataAPI)
             {
                 if (abstractDataAPI == null)
@@ -53,7 +54,7 @@ namespace Logika
 
                     x = random.Next(ballRadius, _dataAPI.GetSceneWidth() - ballRadius);
                     y = random.Next(ballRadius, _dataAPI.GetSceneHeight() - ballRadius);
-                    _dataAPI.CreateBall(i, x, y);
+                    _dataAPI.CreateBall(i, x, y, _logger);
 
                     IBall ball = _dataAPI.GetAllBalls().ElementAt(i);
                     do
@@ -132,7 +133,7 @@ namespace Logika
                         ball.Movement = new Vector2(newBallMovementX, newBallMovementY);
                     }
                 }
-                
+
             }
 
             private void CheckCollision(Object o, DataEvent args)

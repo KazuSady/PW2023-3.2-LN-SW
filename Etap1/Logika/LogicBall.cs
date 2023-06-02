@@ -27,11 +27,5 @@ namespace Logika
         }
 
         public override event EventHandler<LogicEvent>? PropertyChanged;
-        /*
-        protected void OnPropertyChanged([CallerMemberName] string propertyName = "")
-        {
-            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-        */
     }
 }

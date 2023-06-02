@@ -4,12 +4,13 @@ using System.Runtime.Serialization;
 
 namespace Dane
 {
-    public abstract class IBall
+    public abstract class IBall : ISerializable
     {
-        public static IBall CreateBall(int id, float x, float y)
+        public static IBall CreateBall(int id, float x, float y, AbstractBallLogger logger)
         {
-            return new Ball(id, x, y);
+            return new Ball(id, x, y, logger);
         }
+        public abstract int ID { get; }
         public abstract Vector2 Position { get; }
         public abstract Vector2 Movement { get; set; }
         public abstract bool IsRunning { get; set; }
@@ -17,6 +18,11 @@ namespace Dane
 
         public abstract event EventHandler<DataEvent> PropertyChanged;
 
-
+        public void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            info.AddValue("ID: ", ID);
+            info.AddValue("Position: ", Position);
+            info.AddValue("Movement: ", Movement);
+        }
     }
 }
