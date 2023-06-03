@@ -20,7 +20,10 @@ namespace Dane
 
         private void MakeMove()
         {
-            Vector2 newPosition = new Vector2(Movement.X + Position.X, Movement.Y + Position.Y);
+            Vector2 prevMovement = Movement;
+            Vector2 prevPosition = Position;
+
+            Vector2 newPosition = new Vector2(prevMovement.X + prevPosition.X, prevMovement.Y + prevPosition.Y);
             _Position = newPosition;
             DataEvent args = new DataEvent(this);
             PropertyChanged?.Invoke(this, args);
