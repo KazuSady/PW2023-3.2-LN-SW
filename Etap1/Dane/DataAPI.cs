@@ -15,7 +15,7 @@ namespace Dane
 
         public abstract void CreateScene(int height, int width);
         public abstract List<IBall> GetAllBalls();
-        public abstract void CreateBall(int id, int x, int y, AbstractBallLogger logger);
+        public abstract void CreateBall(int id, int x, int y);
         public abstract int GetSceneWidth();
         public abstract int GetSceneHeight();
         public abstract void TurnOff();
@@ -33,7 +33,7 @@ namespace Dane
             private int sceneHeight;
             private int sceneWidth;
             private bool isRunning;
-            private object lockObject = new object();
+            private AbstractBallLogger logger;
 
             public DataAPI()
             {
@@ -45,12 +45,13 @@ namespace Dane
             {
                 sceneHeight = height;
                 sceneWidth = width;
+                logger = AbstractBallLogger.CreateBallLoger(height, width);
             }
             public override List<IBall> GetAllBalls()
             {
                 return _ballList.GetAllBalls();
             }
-            public override void CreateBall(int id, int x, int y, AbstractBallLogger logger)
+            public override void CreateBall(int id, int x, int y)
             {
                 Ball ball = new Ball(id, x, y, logger);
                 _ballList.AddBall(ball);

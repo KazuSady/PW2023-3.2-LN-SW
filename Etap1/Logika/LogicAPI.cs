@@ -25,7 +25,7 @@ namespace Logika
             private List<ILogicBall> _logicBalls;
             private int ballRadius;
             private object LockObject = new object();
-            private AbstractBallLogger _logger = AbstractBallLogger.CreateBallLoger();
+
             public LogicAPI(AbstractDataAPI abstractDataAPI)
             {
                 if (abstractDataAPI == null)
@@ -54,7 +54,7 @@ namespace Logika
 
                     x = random.Next(ballRadius, _dataAPI.GetSceneWidth() - ballRadius);
                     y = random.Next(ballRadius, _dataAPI.GetSceneHeight() - ballRadius);
-                    _dataAPI.CreateBall(i, x, y, _logger);
+                    _dataAPI.CreateBall(i, x, y);
 
                     IBall ball = _dataAPI.GetAllBalls().ElementAt(i);
                     do

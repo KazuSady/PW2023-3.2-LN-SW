@@ -15,7 +15,7 @@ namespace Dane
         private Mutex _writeMutex = new Mutex();
         private Mutex _enterQueueMutex = new Mutex();
 
-        public BallLogger()
+        public BallLogger(int sceneHeigth, int sceneWidth)
         {
             //Trzeba szukać w temp
             string path = Path.GetTempPath();
@@ -36,10 +36,19 @@ namespace Dane
                 }
             }
             _logArray = new JArray();
+
+            JObject sceneSizeObject = new JObject();
+            sceneSizeObject["Scene Height: "] = sceneHeigth;
+            sceneSizeObject["Scene Width: "] = sceneWidth;
+            sceneSizeObject["Time"] = DateTime.Now.ToString("HH:mm:ss");
+            _logArray.Add(sceneSizeObject);
+
             FileStream file = File.Create(_filePath);
             file.Close();
 
         }
+
+
 
         public override void addBallToQueue(IBall ball)
         {
@@ -48,7 +57,6 @@ namespace Dane
             {
                 JObject logObject = JObject.FromObject(ball);
                 logObject["Time:"] = DateTime.Now.ToString("HH:mm:ss");
-
                 _ballsQueue.Enqueue(logObject);
                 if (_logerTask == null || _logerTask.IsCompleted)
                 {
@@ -61,8 +69,9 @@ namespace Dane
             }
         }
 
-        public void writeDataToLogFile()
+        private void writeDataToLogFile()
         {
+
             while (_ballsQueue.TryDequeue(out JObject ball))
             {
                 _logArray.Add(ball);
