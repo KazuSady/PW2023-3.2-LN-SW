@@ -45,7 +45,8 @@ namespace Dane
             {
                 sceneHeight = height;
                 sceneWidth = width;
-                logger = AbstractBallLogger.CreateBallLoger(height, width);
+                logger = AbstractBallLogger.CreateBallLoger();
+                logger.writeSceneSizeToLogFile(sceneHeight, sceneWidth);
             }
             public override List<IBall> GetAllBalls()
             {
