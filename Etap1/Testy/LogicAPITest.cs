@@ -1,5 +1,6 @@
 ﻿using Dane;
 using Logika;
+using Microsoft.VisualStudio.TestTools.UnitTesting.Logging;
 using System.Drawing;
 using System.Numerics;
 
@@ -15,8 +16,9 @@ namespace Testy
             private int sceneWidth;
             private bool isRunning;
             List<IBall> _ballList = new List<IBall>();
+            private AbstractBallLogger logger;
 
-            public override void CreateBall(int id, int x, int y, AbstractBallLogger logger)
+            public override void CreateBall(int id, int x, int y)
             {
                 Random random = new Random();
                 x = random.Next(ballRadius, this.GetSceneWidth() - ballRadius);
@@ -34,6 +36,7 @@ namespace Testy
             {
                 sceneHeight = height;
                 sceneWidth = width;
+                logger = AbstractBallLogger.CreateBallLoger();
             }
 
             public override List<IBall> GetAllBalls()

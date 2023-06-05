@@ -13,7 +13,7 @@ namespace Testy
         {
             AbstractDataAPI dataAPI = AbstractDataAPI.CreateApi();
             AbstractBallLogger abstractBallLogger = AbstractBallLogger.CreateBallLoger();
-            dataAPI.CreateBall(1, 10, 10, abstractBallLogger);
+            dataAPI.CreateBall(1, 10, 10);
             Assert.IsTrue(dataAPI.GetAllBalls().First().Position.X == 10);
             Assert.IsTrue(dataAPI.GetAllBalls().First().Position.Y == 10);
         }
@@ -23,7 +23,7 @@ namespace Testy
         {
             AbstractDataAPI dataAPI = AbstractDataAPI.CreateApi();
             AbstractBallLogger abstractBallLogger = AbstractBallLogger.CreateBallLoger();
-            dataAPI.CreateBall(1, 10, 10, abstractBallLogger);
+            dataAPI.CreateBall(1, 10, 10);
             dataAPI.GetAllBalls().First().Movement = new Vector2(1, 1);
 
 
@@ -36,7 +36,7 @@ namespace Testy
         {
             AbstractDataAPI dataAPI = AbstractDataAPI.CreateApi();
             AbstractBallLogger abstractBallLogger = AbstractBallLogger.CreateBallLoger();
-            dataAPI.CreateBall(1, 10, 10, abstractBallLogger);
+            dataAPI.CreateBall(1, 10, 10);
             IBall ball = dataAPI.GetAllBalls().First();
 
             Assert.IsTrue(ball.Position.X == 10);
@@ -75,7 +75,7 @@ namespace Testy
             dataAPI.CreateScene(400, 400);
             for (int i = 0; i < 10; i++)
             {
-                dataAPI.CreateBall(i, 10 * i, 10 * i, abstractBallLogger);
+                dataAPI.CreateBall(i, 10 * i, 10 * i);
             }
             Assert.IsTrue(10 == dataAPI.GetAllBalls().Count);
         }
