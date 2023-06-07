@@ -1,5 +1,4 @@
 ﻿using Dane;
-using System.Drawing;
 using System.Numerics;
 
 namespace Testy
@@ -12,31 +11,29 @@ namespace Testy
         public void dataAPIBallPOsitionTest()
         {
             AbstractDataAPI dataAPI = AbstractDataAPI.CreateApi();
-            AbstractBallLogger abstractBallLogger = AbstractBallLogger.CreateBallLoger();
-            dataAPI.CreateBall(1, 10, 10, abstractBallLogger);
+            dataAPI.CreateBall(1, 10, 10);
             Assert.IsTrue(dataAPI.GetAllBalls().First().Position.X == 10);
             Assert.IsTrue(dataAPI.GetAllBalls().First().Position.Y == 10);
         }
-
+        
         [TestMethod]
         public void DataAPIBallMovementTest()
         {
             AbstractDataAPI dataAPI = AbstractDataAPI.CreateApi();
-            AbstractBallLogger abstractBallLogger = AbstractBallLogger.CreateBallLoger();
-            dataAPI.CreateBall(1, 10, 10, abstractBallLogger);
+            dataAPI.CreateBall(1, 10, 10);
             dataAPI.GetAllBalls().First().Movement = new Vector2(1, 1);
 
 
             Assert.IsTrue(dataAPI.GetAllBalls().First().Movement.X == 1);
             Assert.IsTrue(dataAPI.GetAllBalls().First().Movement.Y == 1);
         }
-
+        
+        
         [TestMethod]
         public void dataAPIBallsMovingTest()
         {
             AbstractDataAPI dataAPI = AbstractDataAPI.CreateApi();
-            AbstractBallLogger abstractBallLogger = AbstractBallLogger.CreateBallLoger();
-            dataAPI.CreateBall(1, 10, 10, abstractBallLogger);
+            dataAPI.CreateBall(1, 10, 10);
             IBall ball = dataAPI.GetAllBalls().First();
 
             Assert.IsTrue(ball.Position.X == 10);
@@ -52,7 +49,8 @@ namespace Testy
             Assert.AreNotEqual(prevMovement.Y, ball.Position.Y);
 
         }
-
+        
+        
         [TestMethod]
         public void dataAPITurnOnTurnOffTest()
         {
@@ -66,19 +64,19 @@ namespace Testy
             dataAPI.TurnOff();
             Assert.AreEqual(false, dataAPI.IsRunning());
         }
-
+        
+        
         [TestMethod]
         public void dataAPICreateBallsTest()
         {
             AbstractDataAPI dataAPI = AbstractDataAPI.CreateApi();
-            AbstractBallLogger abstractBallLogger = AbstractBallLogger.CreateBallLoger();
             dataAPI.CreateScene(400, 400);
             for (int i = 0; i < 10; i++)
             {
-                dataAPI.CreateBall(i, 10 * i, 10 * i, abstractBallLogger);
+                dataAPI.CreateBall(i, 10 * i, 10 * i);
             }
             Assert.IsTrue(10 == dataAPI.GetAllBalls().Count);
         }
-
+        
     }
 }

@@ -6,10 +6,6 @@ namespace Dane
 {
     public abstract class IBall : ISerializable
     {
-        public static IBall CreateBall(int id, float x, float y, AbstractBallLogger logger)
-        {
-            return new Ball(id, x, y, logger);
-        }
         public abstract int ID { get; }
         public abstract Vector2 Position { get; }
         public abstract Vector2 Movement { get; set; }
