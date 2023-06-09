@@ -39,13 +39,13 @@ namespace Dane
             {
                 _ballList = new BallList();
                 isRunning = false;
+                logger = AbstractBallLogger.CreateBallLoger();
             }
 
             public override void CreateScene(int height, int width)
             {
                 sceneHeight = height;
                 sceneWidth = width;
-                logger = AbstractBallLogger.CreateBallLoger();
                 logger.writeSceneSizeToLogFile(sceneHeight, sceneWidth);
             }
             public override List<IBall> GetAllBalls()

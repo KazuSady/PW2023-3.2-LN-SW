@@ -9,6 +9,56 @@ namespace Testy
     [TestClass]
     public class LogicAPITest
     {
+        
+        internal class FakeDataBall : IBall
+        {
+
+            private Vector2 _Position;
+            private bool _isRunning = false;
+            public override int ID { get; }
+            public override Vector2 Position
+            { get { return _Position; } }
+            public override Vector2 Movement { get; set; }
+            public override bool IsRunning
+            { get { return _isRunning; } set { _isRunning = value; } }
+
+            public override event EventHandler<DataEvent> PropertyChanged;
+
+            public FakeDataBall(int id, float x, float y)
+            {
+                ID = id;
+                _Position = new Vector2(x, y);
+                Task.Run(StartMovement);
+            }
+
+            private void MakeMove()
+            {
+                Vector2 prevMovement = Movement;
+                Vector2 prevPosition = Position;
+
+                Vector2 newPosition = new Vector2(prevMovement.X + prevPosition.X, prevMovement.Y + prevPosition.Y);
+                _Position = newPosition;
+                DataEvent args = new DataEvent(this);
+                PropertyChanged?.Invoke(this, args);
+            }
+
+            private async void StartMovement()
+            {
+                _isRunning = true;
+                while (_isRunning)
+                {
+                    MakeMove();
+                    double speed = Math.Sqrt(Math.Pow(Movement.X, 2) + Math.Pow(Movement.Y, 2));
+                    await Task.Delay((int)speed);
+                }
+            }
+
+            public override void TurnOff()
+            {
+                _isRunning = false;
+            }
+        }
+        
         internal class FakeDataAPI : AbstractDataAPI
         {
             int ballRadius = 10;
@@ -24,7 +74,7 @@ namespace Testy
                 x = random.Next(ballRadius, this.GetSceneWidth() - ballRadius);
                 y = random.Next(ballRadius, this.GetSceneHeight() - ballRadius);
 
-                _ballList.Add(IBall.CreateBall(1, x, y, logger));
+                _ballList.Add(new FakeDataBall(1, x, y));
                 do
                 {
                     _ballList.Last().Movement = new Vector2(random.Next(-10000, 10000) % 3, random.Next(-10000, 10000) % 3);
