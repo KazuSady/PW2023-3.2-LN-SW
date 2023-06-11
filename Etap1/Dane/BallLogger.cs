@@ -10,20 +10,22 @@ namespace Dane
     {
         private string _filePath;
         private bool isRunning;
-        private ConcurrentQueue<JObject> _ballsQueue;
+        private ConcurrentQueue<IBall> _ballsQueue;
         private Mutex _writeMutex = new Mutex();
         private Mutex _enterQueueMutex = new Mutex();
+        private CancellationTokenSource StateChange = new CancellationTokenSource();
 
         public BallLogger()
         {
             string path = Path.GetTempPath();
             _filePath = Path.Combine(path, "DataBallsLog.json");
-            _ballsQueue = new ConcurrentQueue<JObject>();
-            if (!File.Exists(_filePath))
+            _ballsQueue = new ConcurrentQueue<IBall>();
+
+            using (FileStream file = File.Create(_filePath))
             {
-                FileStream file = File.Create(_filePath);
                 file.Close();
             }
+
             isRunning = true;
             Task.Run(writeDataToLogFile);
         }
@@ -47,28 +49,18 @@ namespace Dane
 
         public override void addBallToQueue(IBall ball)
         {
-            _enterQueueMutex.WaitOne();
-            try
+            if (_ballsQueue.Count < 50)
             {
-                if (_ballsQueue.Count < 50)
-                {
-                    JObject logObject = JObject.FromObject(ball);
-                    logObject["Time:"] = DateTime.Now.ToString("HH:mm:ss");
-                    _ballsQueue.Enqueue(logObject);
-                }
+                _ballsQueue.Enqueue(ball);
+                StateChange.Cancel();
             }
-            finally
-            {
-                _enterQueueMutex.ReleaseMutex();
-            }
-
         }
 
-        private void writeDataToLogFile()
+        private async void writeDataToLogFile()
         {
             while (this.isRunning)
             {
-                while (_ballsQueue.TryDequeue(out JObject ball))
+                while (_ballsQueue.TryDequeue(out IBall? ball))
                 {
                     string data = JsonConvert.SerializeObject(ball, Newtonsoft.Json.Formatting.Indented);
                     _writeMutex.WaitOne();
@@ -80,6 +72,12 @@ namespace Dane
                     {
                         _writeMutex.ReleaseMutex();
                     }
+                }
+                await Task.Delay(Timeout.Infinite, StateChange.Token).ContinueWith(_ => { });
+
+                if (this.StateChange.IsCancellationRequested)
+                {
+                    this.StateChange = new CancellationTokenSource();
                 }
             }
         }

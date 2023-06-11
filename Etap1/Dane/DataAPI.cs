@@ -52,7 +52,7 @@ namespace Dane
             }
             public override void CreateBall(int id, int x, int y)
             {
-                Ball ball = new Ball(id, x, y, this.logger);
+                Ball ball = new Ball(id, x, y, logger);
                 _ballList.AddBall(ball);
             }
 
@@ -73,9 +73,9 @@ namespace Dane
             }
             public override void TurnOn()
             {
-                isRunning = true;
                 logger = AbstractBallLogger.CreateBallLoger();
                 logger.writeSceneSizeToLogFile(sceneHeight, sceneWidth);
+                isRunning = true;
             }
             public override bool IsRunning()
             {
