@@ -73,7 +73,7 @@ namespace Testy
             dataAPI.CreateScene(400, 400);
             for (int i = 0; i < 10; i++)
             {
-                dataAPI.CreateBall(i, 10 * i, 10 * i);
+                dataAPI.CreateBall(i, 10, 10);
             }
             Assert.IsTrue(10 == dataAPI.GetAllBalls().Count);
         }

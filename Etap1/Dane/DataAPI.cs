@@ -54,7 +54,7 @@ namespace Dane
             }
             public override void CreateBall(int id, int x, int y)
             {
-                Ball ball = new Ball(id, x, y, logger);
+                Ball ball = new Ball(id, x, y, this.logger);
                 _ballList.AddBall(ball);
             }
 

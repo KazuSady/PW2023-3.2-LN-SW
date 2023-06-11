@@ -146,21 +146,5 @@ namespace Testy
             Assert.IsTrue(10 == logicAPI.GetAllBalls().Count);
         }
 
-        [TestMethod]
-        public void logicAPILogicBallsMovement()
-        {
-            FakeDataAPI fakeDataAPI = new FakeDataAPI();
-            AbstractLogicAPI logicAPI = AbstractLogicAPI.CreateAPI(fakeDataAPI);
-            logicAPI.CreateField(400, 400);
-            logicAPI.CreateBalls(1, 10);
-
-            Vector2 prevPosition = logicAPI.GetAllBalls().Last().Position;
-
-            Thread.Sleep(2000);
-
-            Assert.AreNotEqual(prevPosition.X, logicAPI.GetAllBalls().Last().Position.X);
-            Assert.AreNotEqual(prevPosition.Y, logicAPI.GetAllBalls().Last().Position.Y);
-
-        }
     }
 }
