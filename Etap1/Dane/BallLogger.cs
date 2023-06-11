@@ -26,7 +26,6 @@ namespace Dane
                 file.Close();
             }
 
-            isRunning = true;
             Task.Run(writeDataToLogFile);
         }
 
@@ -80,6 +79,11 @@ namespace Dane
                     this.StateChange = new CancellationTokenSource();
                 }
             }
+        }
+
+        public override void TurnOn()
+        {
+            isRunning = true;
         }
 
         public override void Dispose()

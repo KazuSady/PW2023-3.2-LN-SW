@@ -65,9 +65,9 @@ namespace Model
             }
             public override void TurnOn(int height, int width, int ballAmount, int ballRadius)
             {
-                _logicAPI.TurnOn();
                 CreateField(height, width);
                 CreateBalls(ballAmount, ballRadius);
+                _logicAPI.TurnOn();
             }
 
         }

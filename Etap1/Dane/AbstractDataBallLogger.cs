@@ -11,6 +11,7 @@ namespace Dane
             return new BallLogger();
         }
         public abstract void Dispose();
+        public abstract void TurnOn();
 
     }
 }

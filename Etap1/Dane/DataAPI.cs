@@ -37,6 +37,7 @@ namespace Dane
 
             public DataAPI()
             {
+                logger = AbstractBallLogger.CreateBallLoger();
                 _ballList = new BallList();
                 isRunning = false;
             }
@@ -73,8 +74,8 @@ namespace Dane
             }
             public override void TurnOn()
             {
-                logger = AbstractBallLogger.CreateBallLoger();
                 logger.writeSceneSizeToLogFile(sceneHeight, sceneWidth);
+                logger.TurnOn();
                 isRunning = true;
             }
             public override bool IsRunning()
