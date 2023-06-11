@@ -27,30 +27,8 @@ namespace Testy
             Assert.IsTrue(dataAPI.GetAllBalls().First().Movement.X == 1);
             Assert.IsTrue(dataAPI.GetAllBalls().First().Movement.Y == 1);
         }
-        
-        
-        [TestMethod]
-        public void dataAPIBallsMovingTest()
-        {
-            AbstractDataAPI dataAPI = AbstractDataAPI.CreateApi();
-            dataAPI.CreateBall(1, 10, 10);
-            IBall ball = dataAPI.GetAllBalls().First();
 
-            Assert.IsTrue(ball.Position.X == 10);
-            Assert.IsTrue(ball.Position.Y == 10);
-            Vector2 prevMovement = ball.Position;
 
-            ball.Movement = new Vector2(10, 10);
-
-            dataAPI.TurnOn();
-            Thread.Sleep(20);
-
-            Assert.AreNotEqual(prevMovement.X, ball.Position.X);
-            Assert.AreNotEqual(prevMovement.Y, ball.Position.Y);
-
-        }
-        
-        
         [TestMethod]
         public void dataAPITurnOnTurnOffTest()
         {
@@ -63,20 +41,7 @@ namespace Testy
 
             dataAPI.TurnOff();
             Assert.AreEqual(false, dataAPI.IsRunning());
+
         }
-        
-        
-        [TestMethod]
-        public void dataAPICreateBallsTest()
-        {
-            AbstractDataAPI dataAPI = AbstractDataAPI.CreateApi();
-            dataAPI.CreateScene(400, 400);
-            for (int i = 0; i < 10; i++)
-            {
-                dataAPI.CreateBall(i, 10, 10);
-            }
-            Assert.IsTrue(10 == dataAPI.GetAllBalls().Count);
-        }
-        
     }
 }

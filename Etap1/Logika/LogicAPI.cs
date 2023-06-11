@@ -117,7 +117,7 @@ namespace Logika
                 int weight = 1;
                 if (otherBall != ball)
                 {
-                    float xDistance = ball.Position.X + ball.Movement.X - otherBall.Position.X - otherBall.Movement.Y;
+                    float xDistance = ball.Position.X + ball.Movement.X - otherBall.Position.X - otherBall.Movement.X;
                     float yDistance = ball.Position.Y + ball.Movement.Y - otherBall.Position.Y - otherBall.Movement.Y;
                     double distance = Math.Sqrt(Math.Pow(xDistance, 2) + Math.Pow(yDistance, 2));
 

@@ -50,7 +50,7 @@ namespace Dane
             _enterQueueMutex.WaitOne();
             try
             {
-                if (_ballsQueue.Count < 100)
+                if (_ballsQueue.Count < 50)
                 {
                     JObject logObject = JObject.FromObject(ball);
                     logObject["Time:"] = DateTime.Now.ToString("HH:mm:ss");
@@ -66,8 +66,9 @@ namespace Dane
 
         private void writeDataToLogFile()
         {
-
-                while (_ballsQueue.TryDequeue(out JObject ball) || !isRunning)
+            while (this.isRunning)
+            {
+                while (_ballsQueue.TryDequeue(out JObject ball))
                 {
                     string data = JsonConvert.SerializeObject(ball, Newtonsoft.Json.Formatting.Indented);
                     _writeMutex.WaitOne();
@@ -80,13 +81,18 @@ namespace Dane
                         _writeMutex.ReleaseMutex();
                     }
                 }
-            
+            }
+        }
+
+        public override void Dispose()
+        {
+            this.isRunning = false;
+            _ballsQueue.Clear();
         }
 
         ~BallLogger()
         {
-            _ballsQueue.Clear();
-            isRunning = false;
+            this.Dispose();
         }
     }
 }
